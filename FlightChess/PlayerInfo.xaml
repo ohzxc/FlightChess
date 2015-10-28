@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="FlightChess.PlayerInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FlightChess"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="350">
+    <Grid>
+        <Ellipse Name="ellAvatar" Margin="5,5,349,5" Width="40" Height="40" Fill="#FF0097FF"></Ellipse>
+        <Image Name="imgAvatar" Margin="4,2,306,3" Source="Image/Avatar.png" Stretch="Uniform"  Width="40"></Image>
+        <TextBlock Text="昵称" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="15" Margin="50,8,0,0"></TextBlock>
+        <TextBox x:Name="txtPlayerName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="260" Height="18" Margin="80,5,0,0"></TextBox>
+        <TextBlock Margin="50,28,0,0" Text="位置" Height="15" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock x:Name="txtPo" Text="0" Height="15" Width="260" Margin="80,28,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+    </Grid>
+</UserControl>
