@@ -22,7 +22,6 @@ namespace FlightChess
         /// 是否可掷色子的标志
         /// </summary>
         public int Flag { get; set; }
-
         /// <summary>
         /// 判断是否踩到了机关
         /// </summary>

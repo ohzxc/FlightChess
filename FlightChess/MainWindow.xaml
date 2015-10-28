@@ -60,7 +60,9 @@
                     <RowDefinition Height="48"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Border BorderThickness="1" BorderBrush="Black" ></Border>
-                <TextBlock Name="tbGameRecord"  Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Margin="10" ScrollViewer.CanContentScroll="True"></TextBlock>
+                <ScrollViewer Margin="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock Name="tbGameRecord" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Margin="5"></TextBlock>
+                </ScrollViewer>
                 <TextBox Grid.Row="1" ToolTip="消息输入框" Margin="0,11,56,9" ></TextBox>
                 <Button Grid.Row="1" Content="发送" Margin="329,10,1,10"/>
                 <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,9,0,0" HorizontalAlignment="Left" Width="179"></Button>

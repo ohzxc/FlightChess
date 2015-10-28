@@ -90,15 +90,19 @@ namespace FlightChess
                 MessageBox.Show("游戏未开始。");
                 return;
             }
-
-
-            var currentPlayer = (_Player1.Flag == 0) ? _Player1 : _Player2;
+            if(_Player2.Flag + _Player1.Flag > 2)
+            {
+                var tmp = (_Player1.Flag < _Player1.Flag) ? (_Player2.Flag - _Player1.Flag) : (_Player1.Flag - _Player2.Flag);
+                _Player1.Flag = (_Player1.Flag < _Player1.Flag) ? 0 : 1;
+                _Player2.Flag = (_Player1.Flag ==0 ) ? 1 : 0;
+            }
+            var currentPlayer = (_Player1.Flag < _Player2.Flag) ? _Player1 : _Player2;
             var anotherPlayer = (currentPlayer == _Player1) ? _Player2 : _Player1;
             var num = (new Random()).Next(1, 7);
             tbGameRecord.Text+="玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。\n";
             Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             currentPlayer.Flag++;
-            anotherPlayer.Flag--;
+            anotherPlayer.Flag--; 
 
         }
     }
