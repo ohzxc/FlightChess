@@ -21,7 +21,7 @@ namespace FlightChess
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
                 return;
             }
-            if (currentPlayer.PlayerPo == anotherPlayer.PlayerPo)
+            if (currentPlayer.PlayerPo == anotherPlayer.PlayerPo&& currentPlayer.PlayerPo!=0)
             {   
                 MessageBox.Show(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！");
                 Game.PlayerMove(anotherPlayer, -6);

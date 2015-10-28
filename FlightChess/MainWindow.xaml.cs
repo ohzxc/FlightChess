@@ -85,6 +85,13 @@ namespace FlightChess
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
+            if (flag == false)
+            {
+                MessageBox.Show("游戏未开始。");
+                return;
+            }
+
+
             var currentPlayer = (_Player1.Flag == 0) ? _Player1 : _Player2;
             var anotherPlayer = (currentPlayer == _Player1) ? _Player2 : _Player1;
             var num = (new Random()).Next(1, 7);
