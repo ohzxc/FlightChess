@@ -72,25 +72,12 @@ namespace FlightChess
             //初始化玩家
             pi1.txtPlayerName.IsEnabled = false;
             pi2.txtPlayerName.IsEnabled = false;
-            _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0 };
-            _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1 };
-            Map.AddControls(new Ellipse() {
-                Name = "ellPlayer1",
-                Height = 10,
-                Width = 10,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(10),
-                Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 0, 0) }
-            }, gdMap, 0);
-            Map.AddControls(new Ellipse()
-            {
-                Name = "ellPlayer2",
-                Height = 10,
-                Width = 10,
-                Margin = new Thickness(10),
-                HorizontalAlignment =HorizontalAlignment.Right,
-                Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 0, 0, 255) }
-            }, gdMap, 0);
+            _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0,PlayerUI=ellPlayer1 };
+            _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1,PlayerUI=ellPlayer2 };
+            ellPlayer1.Visibility = Visibility.Visible;
+            ellPlayer2.Visibility = Visibility.Visible;
+            Grid.SetZIndex(ellPlayer1, 2);
+            Grid.SetZIndex(ellPlayer2, 2);
             flag = true;//已初始化标志
             #endregion
             //if ((sender as Button).Content.ToString() == "开始游戏")
@@ -98,6 +85,13 @@ namespace FlightChess
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
+            var currentPlayer = (_Player1.Flag == 0) ? _Player1 : _Player2;
+            var anotherPlayer = (currentPlayer == _Player1) ? _Player2 : _Player1;
+            var num = (new Random()).Next(1, 7);
+            tbGameRecord.Text+="玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。\n";
+            Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
+            currentPlayer.Flag++;
+            anotherPlayer.Flag--;
 
         }
     }

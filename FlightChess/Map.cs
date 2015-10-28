@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 
 namespace FlightChess
 {
-    class Map
+    public class Map
     {
         /// <summary>
         /// 地图数据
@@ -93,16 +93,12 @@ namespace FlightChess
                     default:break;
                 }
                 AddControls(con, gdMap, i);
-                //Pos = Num2Po(i);
-                //Grid.SetColumn(con, Pos[1]);
-                //Grid.SetRow(con, Pos[0]);
-                //gdMap.Children.Add(con);
             }
         }
         /// <summary>
         /// 将数字转化成坐标
         /// </summary>
-        /// <param name="num">地图上的位置</param>
+        /// <param name="num">地图上的步数</param>
         public static int[] Num2Po(int num)
         {
             if((num / 10) % 2 == 0)//奇数行
