@@ -44,7 +44,10 @@ namespace FlightChess
                     break;
                 default: break;
             }
-            
+            if (currentPlayer.PlayerPo == 99)
+            {
+                MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
+            }
         }
         /// <summary>
         /// 玩家移动
@@ -87,7 +90,7 @@ namespace FlightChess
                 Game.PlayerMove(anotherPlayer, 0);
             }    
         }
-        /// <summary>
+        /// <summary> 
         /// 地雷
         /// </summary>
         /// <param name="player">遭遇地雷的玩家</param>
