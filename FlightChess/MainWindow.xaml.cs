@@ -27,11 +27,11 @@ namespace FlightChess
         /// <summary>
         /// 开始游戏标志
         /// </summary>
-        public bool flag { get; set; }
+        bool flag { get; set; }
         /// <summary>
         /// 地图已加载标志
         /// </summary>
-        public bool flagMap { get; set; }
+        bool flagMap { get; set; }
         /// <summary>
         /// 地图
         /// </summary>
@@ -44,8 +44,11 @@ namespace FlightChess
         /// 玩家二
         /// </summary>
         Player _Player2 { get; set; }
+        /// <summary>
+        /// 通讯套接字
+        /// </summary>
+        Socket socketSend { get; set; }
 
-        private delegate void outputDelegate(string msg);
         public MainWindow()
         {
             InitializeComponent();
@@ -169,20 +172,40 @@ namespace FlightChess
 
         private void btnListen_Click(object sender, RoutedEventArgs e)
         {
-            var socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var ip = IPAddress.Parse(txtIP.Text);
-            IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
-            socketWatch.Bind(point);
-            output("监听成功.");
-            socketWatch.Listen(1);
+            try
+            {
+                var socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var ip = IPAddress.Parse(txtIP.Text);
+                IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
+                socketWatch.Bind(point);
+                output("监听成功.");
+                socketWatch.Listen(1);
 
-            var th = new Thread(Listen);
-            th.IsBackground = true;
-            th.Start(socketWatch);
+                var th = new Thread(Listen);
+                th.IsBackground = true;
+                th.Start(socketWatch);
+            }
+            catch { }
+        }
+
+        private void btnSend_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string str = tbMsg.Text.Trim();
+                byte[] buffer = Encoding.UTF8.GetBytes(str);
+                List<byte> list = new List<byte>();
+                list.Add(7);
+                list.AddRange(buffer);
+                //将泛型集合转换为数组
+                byte[] newBuffer = list.ToArray();
+                socketSend.Send(newBuffer);
+                output("我：" + str);
+                tbMsg.Text = "";
+            }
+            catch { }
         }
         #endregion
-
-        Socket socketSend;
 
         void Listen(object o)
         {
@@ -194,14 +217,7 @@ namespace FlightChess
                 {
                     //负责跟客户端通信的Socket
                     socketSend = socketWatch.Accept();
-                    //将远程连接的客户端的IP地址和Socket存入集合中
-                    //dicSocket.Add(socketSend.RemoteEndPoint.ToString(), socketSend);
-                    //将远程连接的客户端的IP地址和端口号存储下拉框中
-                    //cboUsers.Items.Add(socketSend.RemoteEndPoint.ToString());
-                    //192.168.11.78：连接成功
                     output(socketSend.RemoteEndPoint.ToString() + ":连接成功。");
-                    //tbGameRecord.Text += socketSend.RemoteEndPoint.ToString() + ":连接成功\n";
-                    //MessageBox.Show(socketSend.RemoteEndPoint.ToString() + ":连接成功\n");
                     //开启 一个新线程不停的接受客户端发送过来的消息
                     Thread th = new Thread(Recive);
                     th.IsBackground = true;
@@ -212,8 +228,7 @@ namespace FlightChess
             }
             
         }
-        //Dictionary<string, Socket> dicSocket = new Dictionary<string, Socket>();
-
+       
         void Recive(object o)
         {
             Socket socketSend = o as Socket;
@@ -229,29 +244,20 @@ namespace FlightChess
                     {
                         break;
                     }
-                    string str = Encoding.UTF8.GetString(buffer, 0, r);
-                    output(socketSend.RemoteEndPoint.ToString() + "：" + str+"。");
+                    //发送正常消息
+                    if (buffer[0] == 7)
+                    {
+                        string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
+                        output(socketSend.RemoteEndPoint + ":" + s);
+                    }
                 }
                 catch
                 { }
             }
         }
 
-        private void btnSend_Click(object sender, RoutedEventArgs e)
-        {
-            string str = tbMsg.Text;
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
-            List<byte> list = new List<byte>();
-            list.Add(7);
-            list.AddRange(buffer);
-            //将泛型集合转换为数组
-            byte[] newBuffer = list.ToArray();
-            //buffer = list.ToArray();不可能
-            //获得用户在下拉框中选中的IP地址
-            string ip = socketSend.RemoteEndPoint.ToString();
-            socketSend.Send(newBuffer);
-            //     socketSend.Send(buffer);
-        }
+        #region 为了跨线程修改控件
+        private delegate void outputDelegate(string msg);
 
         private void output(string msg)
         {
@@ -262,5 +268,6 @@ namespace FlightChess
         {
             this.tbGameRecord.Text+=msg+"\n";
         }
+        #endregion
     }
 }
