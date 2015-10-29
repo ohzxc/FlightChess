@@ -11,6 +11,13 @@ namespace FlightChess
 {
     public static class Game
     {
+        /// <summary>
+        /// 游戏逻辑
+        /// </summary>
+        /// <param name="map">地图数据</param>
+        /// <param name="currentPlayer">本轮玩家</param>
+        /// <param name="anotherPlayer">另一位玩家</param>
+        /// <param name="num">骰子数</param>
         public static void PlayGame(Map map,Player currentPlayer, Player anotherPlayer,int num)
         {
             Game.PlayerMove(currentPlayer, num);
@@ -106,8 +113,6 @@ namespace FlightChess
         /// <param name="player">玩家</param>
         public static void Pause(Player player)
         {
-
-
             player.Flag++;
         }
         /// <summary>
@@ -119,16 +124,6 @@ namespace FlightChess
             Game.PlayerMove(player, 0);
             MessageBox.Show("玩家进入时空隧道，前进10格！");
             Game.PlayerMove(player, 10);
-        }
-        /// <summary>
-        /// 踩人事件
-        /// </summary>
-        /// <param name="currentPlayer">踩人玩家</param>
-        /// <param name="anotherPlayer">被踩玩家</param>
-        /// <returns></returns>
-        public static void SamePo(Player currentPlayer, Player anotherPlayer)
-        {
-
         }
     }
 }

@@ -24,6 +24,7 @@ namespace FlightChess
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region 变量
         /// <summary>
         /// 开始游戏标志
         /// </summary>
@@ -48,6 +49,7 @@ namespace FlightChess
         /// 通讯套接字
         /// </summary>
         Socket socketSend { get; set; }
+        #endregion
 
         public MainWindow()
         {

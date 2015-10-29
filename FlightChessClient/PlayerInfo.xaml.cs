@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FlightChess
+namespace FlightChessClient
 {
     /// <summary>
     /// PlayerInfo.xaml 的交互逻辑

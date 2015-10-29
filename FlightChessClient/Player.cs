@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 
-namespace FlightChess
+namespace FlightChessClient
 {
     public class Player
     {

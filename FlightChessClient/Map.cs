@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace FlightChess
+namespace FlightChessClient
 {
     public class Map
     {

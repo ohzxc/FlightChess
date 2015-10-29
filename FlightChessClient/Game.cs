@@ -7,11 +7,18 @@ using System.Windows;
 using System.Windows.Controls;
 
 
-namespace FlightChess
+namespace FlightChessClient
 {
     public static class Game
     {
-        public static void PlayGame(Map map,Player currentPlayer, Player anotherPlayer,int num)
+        /// <summary>
+        /// 游戏逻辑
+        /// </summary>
+        /// <param name="map">地图数据</param>
+        /// <param name="currentPlayer">本轮玩家</param>
+        /// <param name="anotherPlayer">另一位玩家</param>
+        /// <param name="num">骰子数</param>
+        public static void PlayGame(Map map, Player currentPlayer, Player anotherPlayer, int num)
         {
             Game.PlayerMove(currentPlayer, num);
             //currentPlayer.PlayerPo += num;
@@ -20,9 +27,9 @@ namespace FlightChess
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
                 return;
             }
-            if (currentPlayer.PlayerPo == anotherPlayer.PlayerPo&& currentPlayer.PlayerPo!=0)
-            {   
-                MessageBox.Show(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！");
+            if (currentPlayer.PlayerPo == anotherPlayer.PlayerPo && currentPlayer.PlayerPo != 0)
+            {
+                MessageBox.Show(anotherPlayer.PlayerName + "被" + currentPlayer.PlayerName + "踩了，后退6格！");
                 Game.PlayerMove(anotherPlayer, -6);
                 //PlayGame(map, anotherPlayer, currentPlayer, 0);
             }
@@ -73,7 +80,7 @@ namespace FlightChess
         /// <param name="currentPlayer">该轮玩家</param>
         /// <param name="anotherPlayer">另一个玩家</param>
         /// <returns></returns>
-        public static void Luckyturn(Player currentPlayer,Player anotherPlayer)
+        public static void Luckyturn(Player currentPlayer, Player anotherPlayer)
         {
             if (MessageBox.Show("选是对方退6格，选否玩家交换位置", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
@@ -88,7 +95,7 @@ namespace FlightChess
                 anotherPlayer.PlayerPo = tmp;
                 Game.PlayerMove(currentPlayer, 0);
                 Game.PlayerMove(anotherPlayer, 0);
-            }    
+            }
         }
         /// <summary> 
         /// 地雷
@@ -106,8 +113,6 @@ namespace FlightChess
         /// <param name="player">玩家</param>
         public static void Pause(Player player)
         {
-
-
             player.Flag++;
         }
         /// <summary>
@@ -119,16 +124,6 @@ namespace FlightChess
             Game.PlayerMove(player, 0);
             MessageBox.Show("玩家进入时空隧道，前进10格！");
             Game.PlayerMove(player, 10);
-        }
-        /// <summary>
-        /// 踩人事件
-        /// </summary>
-        /// <param name="currentPlayer">踩人玩家</param>
-        /// <param name="anotherPlayer">被踩玩家</param>
-        /// <returns></returns>
-        public static void SamePo(Player currentPlayer, Player anotherPlayer)
-        {
-
         }
     }
 }
