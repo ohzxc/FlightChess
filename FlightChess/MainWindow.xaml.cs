@@ -64,7 +64,7 @@ namespace FlightChess
             {
                 landMine = new int[] { 5, 13, 17, 33, 38, 50, 64, 80, 94 },
                 luckyturn = new int[] { 6, 23, 40, 55, 69, 83 },
-                pause = new int[] { 9, 27, 60, 93, 2, 3, 4, 7, 8 },
+                pause = new int[] { 9, 27, 60, 93 },
                 timeTunnel = new int[] { 20, 25, 45, 63, 72, 88, 90 }
             };        
             _Map.InitailMap();
@@ -101,8 +101,14 @@ namespace FlightChess
             var num = (new Random()).Next(1, 7);
             tbGameRecord.Text+="玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。\n";
             Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
-            currentPlayer.Flag++;
+            if (anotherPlayer.Flag > 1)
+                currentPlayer.Flag++;
             anotherPlayer.Flag--; 
+
+        }
+
+        private void btnListen_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }

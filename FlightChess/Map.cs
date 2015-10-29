@@ -85,10 +85,10 @@ namespace FlightChess
                         con.Text = "地雷";                       
                         break;
                     case 3:
-                        con.Text = "时空隧道";
+                        con.Text = "暂停一轮";
                         break;
                     case 4:
-                        con.Text = "暂停一轮";
+                        con.Text = "时空隧道";
                         break;
                     default:break;
                 }

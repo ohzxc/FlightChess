@@ -55,18 +55,23 @@
             <local:PlayerInfo x:Name="pi2" Width="394" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" ></local:PlayerInfo>
             <Grid Height="399" Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="293"></RowDefinition>
-                    <RowDefinition Height="58"></RowDefinition>
-                    <RowDefinition Height="48"></RowDefinition>
+                    <RowDefinition Height="253"></RowDefinition>
+                    <RowDefinition Height="60"></RowDefinition>
+                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Border BorderThickness="1" BorderBrush="Black" ></Border>
                 <ScrollViewer Margin="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <TextBlock Name="tbGameRecord" Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Margin="5"></TextBlock>
+                    <TextBlock Name="tbGameRecord" Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Height="239"/>
                 </ScrollViewer>
                 <TextBox Grid.Row="1" ToolTip="消息输入框" Margin="0,11,56,9" ></TextBox>
                 <Button Grid.Row="1" Content="发送" Margin="329,10,1,10"/>
-                <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,9,0,0" HorizontalAlignment="Left" Width="179"></Button>
-                <Button Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,9,0,0" HorizontalAlignment="Right" Width="185" Click="btnPlay_Click"></Button>
+                <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,6,0,3" HorizontalAlignment="Left" Width="179"></Button>
+                <Button Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,5,7,4" HorizontalAlignment="Right" Width="185" Click="btnPlay_Click"></Button>
+                <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="198"/>
+                <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="218,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="44"/>
+                <Button x:Name="btnListen" Content="开始监听" HorizontalAlignment="Left" Margin="295,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Height="33" Click="btnListen_Click"/>
+
             </Grid>
         </StackPanel>
     </Grid>

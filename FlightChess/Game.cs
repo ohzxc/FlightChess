@@ -15,7 +15,6 @@ namespace FlightChess
         {
             Game.PlayerMove(currentPlayer, num);
             //currentPlayer.PlayerPo += num;
-            //Game.UpdateUiPo(currentPlayer);
             if (currentPlayer.PlayerPo == 99)
             {
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
@@ -25,8 +24,7 @@ namespace FlightChess
             {   
                 MessageBox.Show(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！");
                 Game.PlayerMove(anotherPlayer, -6);
-                PlayGame(map, anotherPlayer, currentPlayer, 0);
-                //Game.UpdateUiPo(anotherPlayer);
+                //PlayGame(map, anotherPlayer, currentPlayer, 0);
             }
             switch (map.Maps[currentPlayer.PlayerPo])
             {
@@ -35,14 +33,14 @@ namespace FlightChess
                     break;
                 case 2:
                     LandMine(currentPlayer);
-                    PlayGame(map, currentPlayer, anotherPlayer, 0);
-                    break;
-                case 4:
-                    Pause(currentPlayer);
+                    //PlayGame(map, currentPlayer, anotherPlayer, 0);
                     break;
                 case 3:
+                    Pause(currentPlayer);
+                    break;
+                case 4:
                     TimeTunnel(currentPlayer);
-                    PlayGame(map, currentPlayer, anotherPlayer, 0);
+                    //PlayGame(map, currentPlayer, anotherPlayer, 0);
                     break;
                 default: break;
             }
@@ -105,8 +103,6 @@ namespace FlightChess
         /// <param name="player">玩家</param>
         public static void Pause(Player player)
         {
-
-
             player.Flag++;
         }
         /// <summary>
@@ -118,6 +114,16 @@ namespace FlightChess
             Game.PlayerMove(player, 0);
             MessageBox.Show("玩家进入时空隧道，前进10格！");
             Game.PlayerMove(player, 10);
+        }
+        /// <summary>
+        /// 踩人事件
+        /// </summary>
+        /// <param name="currentPlayer">踩人玩家</param>
+        /// <param name="anotherPlayer">被踩玩家</param>
+        /// <returns></returns>
+        public static void SamePo(Player currentPlayer, Player anotherPlayer)
+        {
+
         }
     }
 }
