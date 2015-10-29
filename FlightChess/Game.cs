@@ -106,6 +106,8 @@ namespace FlightChess
         /// <param name="player">玩家</param>
         public static void Pause(Player player)
         {
+
+
             player.Flag++;
         }
         /// <summary>

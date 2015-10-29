@@ -66,7 +66,7 @@
                 </ScrollViewer>
                 <TextBox Name="tbMsg" Grid.Row="1" ToolTip="消息输入框" Margin="0,11,56,9" ></TextBox>
                 <Button Name="btnSend" Grid.Row="1" Content="发送" Margin="329,10,1,10" Click="btnSend_Click"/>
-                <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,6,0,3" HorizontalAlignment="Left" Width="179"></Button>
+                <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,6,0,3" HorizontalAlignment="Left" Width="179" Background="#FF64FF32"></Button>
                 <Button Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,6,7,3" HorizontalAlignment="Right" Width="176" Click="btnPlay_Click"></Button>
                 <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="198"/>
                 <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="218,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="44"/>
