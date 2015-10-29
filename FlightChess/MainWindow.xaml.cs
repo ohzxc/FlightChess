@@ -242,7 +242,7 @@ namespace FlightChess
             string str = tbMsg.Text;
             byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
             List<byte> list = new List<byte>();
-            list.Add(0);
+            list.Add(7);
             list.AddRange(buffer);
             //将泛型集合转换为数组
             byte[] newBuffer = list.ToArray();

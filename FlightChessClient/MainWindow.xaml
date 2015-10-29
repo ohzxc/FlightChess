@@ -70,7 +70,7 @@
                 <Button Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,6,7,3" HorizontalAlignment="Right" Width="176" Click="btnPlay_Click"></Button>
                 <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="198"/>
                 <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="218,13,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="44"/>
-                <Button x:Name="btnListen" Content="开始监听" HorizontalAlignment="Left" Margin="295,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Height="33" Click="btnListen_Click"/>
+                <Button x:Name="btnLink" Content="连接" HorizontalAlignment="Left" Margin="295,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Height="33" Click="btnLink_Click"/>
 
             </Grid>
         </StackPanel>
