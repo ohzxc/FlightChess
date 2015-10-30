@@ -56,6 +56,7 @@ namespace FlightChess
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
             }
         }
+
         /// <summary>
         /// 玩家移动
         /// </summary>
@@ -74,6 +75,7 @@ namespace FlightChess
             Grid.SetColumn(player.PlayerUI, Pos[1]);
             Grid.SetRow(player.PlayerUI, Pos[0]);
         }
+
         /// <summary>
         /// 玩家总步数更新
         /// </summary>
@@ -91,6 +93,7 @@ namespace FlightChess
             Grid.SetColumn(player.PlayerUI, Pos[1]);
             Grid.SetRow(player.PlayerUI, Pos[0]);
         }
+
         /// <summary>
         /// 幸运转轮
         /// </summary>
@@ -114,6 +117,7 @@ namespace FlightChess
                 Game.PlayerMove(anotherPlayer, 0);
             }    
         }
+
         /// <summary> 
         /// 地雷
         /// </summary>
@@ -124,6 +128,7 @@ namespace FlightChess
             MessageBox.Show("玩家踩到地雷！退6格");
             Game.PlayerMove(player, -6);
         }
+
         /// <summary>
         /// 暂停一局
         /// </summary>
@@ -132,6 +137,7 @@ namespace FlightChess
         {
             player.Flag++;
         }
+
         /// <summary>
         /// 时空隧道
         /// </summary>

@@ -69,17 +69,18 @@ namespace FlightChessClient
             if (MessageBox.Show("选是“单机模式”，选否联机模式", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 //单机
-                txtIP.Visibility = txtPort.Visibility = btnLink.Visibility = Visibility.Collapsed;
+                txtIP.Visibility = txtPort.Visibility = btnLink.Visibility=tbMsg.Visibility = btnSend.Visibility = Visibility.Collapsed;
                 flagMode = false;
             }
             else
             {
                 //联机
-                btnStart.IsEnabled = false;
+                btnStart.Visibility = Visibility.Hidden;
                 flagMode = true;
                 pi1.IsEnabled = false;
             }
         }
+
         #region 事件
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
@@ -128,6 +129,7 @@ namespace FlightChessClient
                 //初始化玩家
                 pi1.txtPlayerName.IsEnabled = false;
                 pi2.txtPlayerName.IsEnabled = false;
+                btnPlay.IsEnabled = true;
                 output("游戏开始！");
                 _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
                 _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
@@ -152,7 +154,7 @@ namespace FlightChessClient
                 }
                 pi1.txtPlayerName.IsEnabled = true;
                 pi2.txtPlayerName.IsEnabled = true;
-                tbGameRecord.Text="";
+                btnPlay.IsEnabled = false;
                 Grid.SetColumn(ellPlayer1, 0);
                 Grid.SetRow(ellPlayer1, 0);
                 Grid.SetColumn(ellPlayer2, 0);
@@ -195,41 +197,44 @@ namespace FlightChessClient
                 currentPlayer.Flag++;
             anotherPlayer.Flag--;
 
-            #region 发送本轮信息
-            //p1位置
-            byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
-            List<byte> list = new List<byte>();
-            list.Add(12);//P1位置
-            list.AddRange(buffer);
-            //将泛型集合转换为数组
-            socketSend.Send(list.ToArray());
+            if (flagMode == true)
+            {
+                #region 发送本轮信息
+                //p1位置
+                byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
+                List<byte> list = new List<byte>();
+                list.Add(12);//P1位置
+                list.AddRange(buffer);
+                //将泛型集合转换为数组
+                socketSend.Send(list.ToArray());
 
-            //p2位置
-            var buffer1 = Encoding.UTF8.GetBytes(_Player2.PlayerPo.ToString());
-            var list1 = new List<byte>();
-            list1.Add(13);//P2位置
-            list1.AddRange(buffer1);
-            //将泛型集合转换为数组
-            socketSend.Send(list1.ToArray());
+                //p2位置
+                var buffer1 = Encoding.UTF8.GetBytes(_Player2.PlayerPo.ToString());
+                var list1 = new List<byte>();
+                list1.Add(13);//P2位置
+                list1.AddRange(buffer1);
+                //将泛型集合转换为数组
+                socketSend.Send(list1.ToArray());
 
-            //游戏记录
-            //var buffer2 = Encoding.UTF8.GetBytes("游戏记录");
-            //var list2 = new List<byte>();
-            //list2.Add(14);
-            //list2.AddRange(buffer2);
-            ////将泛型集合转换为数组
-            //socketSend.Send(list2.ToArray());
+                //游戏记录
+                //var buffer2 = Encoding.UTF8.GetBytes("游戏记录");
+                //var list2 = new List<byte>();
+                //list2.Add(14);
+                //list2.AddRange(buffer2);
+                ////将泛型集合转换为数组
+                //socketSend.Send(list2.ToArray());
 
 
-            ////flag
-            //list = null;
-            //buffer = null;
-            //buffer = Encoding.UTF8.GetBytes("游戏开始");
-            //list.Add(14);
-            //list.AddRange(buffer);
-            ////将泛型集合转换为数组
-            //socketSend.Send(list.ToArray());
-            //output("游戏开始");
+                ////flag
+                //list = null;
+                //buffer = null;
+                //buffer = Encoding.UTF8.GetBytes("游戏开始");
+                //list.Add(14);
+                //list.AddRange(buffer);
+                ////将泛型集合转换为数组
+                //socketSend.Send(list.ToArray());
+                //output("游戏开始");
+            }
             #endregion
         }
 
@@ -305,13 +310,18 @@ namespace FlightChessClient
                     else if (buffer[0] == 12)//p1位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output("对方目前位置" + s[0].ToString());
+                        output("对方目前位置" + s);
+                        if (Convert.ToInt32(s) == 99)
+                        {
+                            MessageBox.Show(_Player1.PlayerName + "胜利");
+                            output(_Player1.PlayerName + "胜利");
+                        }
                         Move1(s);
                     }
                     else if (buffer[0] == 13)//p2位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output("我的目前位置" + s[0].ToString());
+                        output("我的目前位置" + s);
                         Move2(s);
                     }
                     else if (buffer[0] == 14)
@@ -324,7 +334,6 @@ namespace FlightChessClient
                 { }
             }
         }     
-
 
         #region 为了跨线程修改控件
         private delegate void outputDelegate(string msg);

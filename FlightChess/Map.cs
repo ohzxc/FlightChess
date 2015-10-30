@@ -11,6 +11,7 @@ namespace FlightChess
 {
     public class Map
     {
+        #region 变量
         /// <summary>
         /// 地图数据
         /// </summary>
@@ -31,7 +32,9 @@ namespace FlightChess
         /// 时空隧道
         /// </summary>
         public int[] timeTunnel { get; set; }
-        
+        #endregion
+
+        #region 方法
         /// <summary>
         /// 初始化地图数据
         /// </summary>
@@ -122,5 +125,6 @@ namespace FlightChess
             Grid.SetRow(con, Pos[0]);
             gdMap.Children.Add(con);
         }
+        #endregion
     }
 }
