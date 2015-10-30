@@ -75,6 +75,23 @@ namespace FlightChessClient
             Grid.SetRow(player.PlayerUI, Pos[0]);
         }
         /// <summary>
+        /// 玩家总步数更新
+        /// </summary>
+        /// <param name="player">玩家</param>
+        /// <param name="steps">所在步数</param>
+        /// <returns></returns>
+        public static void PlayerMoveExt(Player player, int steps)
+        {
+            player.PlayerPo = steps;
+            if (player.PlayerPo < 0)
+                player.PlayerPo = 0;
+            if (player.PlayerPo > 99)
+                player.PlayerPo = 99;
+            var Pos = Map.Num2Po(steps);
+            Grid.SetColumn(player.PlayerUI, Pos[1]);
+            Grid.SetRow(player.PlayerUI, Pos[0]);
+        }
+        /// <summary>
         /// 幸运转轮
         /// </summary>
         /// <param name="currentPlayer">该轮玩家</param>
