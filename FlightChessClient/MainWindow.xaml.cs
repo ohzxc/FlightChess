@@ -325,6 +325,7 @@ namespace FlightChessClient
             }
         }     
 
+
         #region 为了跨线程修改控件
         private delegate void outputDelegate(string msg);
         //输出游戏记录
