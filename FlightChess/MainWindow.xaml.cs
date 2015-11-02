@@ -226,13 +226,14 @@ namespace FlightChess
             result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
-            if (anotherPlayer.Flag > 1)
-                currentPlayer.Flag++;
-            anotherPlayer.Flag--;
+           
             if (flagMode == true)
             {
+                if (_Player2.Flag > 1)
+                    _Player1.Flag++;
+                _Player2.Flag--;
                 #region 发送本轮信息
-                
+
                 //p1位置
                 byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
                 List<byte> list = new List<byte>();
@@ -284,6 +285,12 @@ namespace FlightChess
                 //将泛型集合转换为数组
                 socketSend.Send(list3.ToArray());
                 #endregion
+            }
+            else
+            {
+                if (_Player2.Flag > 1)
+                    _Player1.Flag++;
+                _Player2.Flag--;
             }
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
             pi2.txtPo.Text = _Player2.PlayerPo.ToString();
@@ -390,7 +397,6 @@ namespace FlightChess
                         //var tmp1 = tmp[1].Split('\n000e');
                         output(tmp[1].Substring(0,tmp[1].Length-2));
                         ChangeBtnState(tmp[1].Substring(tmp[1].Length - 1, 1));
-                        Move2(tmp[0]);
                         //output("对方目前位置" + s);
                         if (Convert.ToInt32(tmp[0]) == 99)
                         {

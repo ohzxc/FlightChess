@@ -32,7 +32,7 @@ namespace FlightChess
             {
                 Game.PlayerMove(anotherPlayer, -6);
                 //PlayGame(map, anotherPlayer, currentPlayer, 0);
-                result+=(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！/n");         
+                result+=(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！\n");         
             }
             switch (map.Maps[currentPlayer.PlayerPo])
             {

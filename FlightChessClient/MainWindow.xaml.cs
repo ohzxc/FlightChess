@@ -149,6 +149,10 @@ namespace FlightChessClient
                         //将泛型集合转换为数组
                         socketSend.Send(list.ToArray());
                     }
+                    else
+                    {
+                        btnPlay.IsEnabled = true;
+                    }
                     flag = true;//已开始游戏标志
                     #endregion
                 }
@@ -204,12 +208,13 @@ namespace FlightChessClient
             result += currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
-            if (anotherPlayer.Flag > 1)
-                currentPlayer.Flag++;
-            anotherPlayer.Flag--;
+            
 
             if (flagMode == true)
             {
+                if (_Player1.Flag > 1)
+                    _Player2.Flag++;
+                _Player1.Flag--;
                 #region 发送本轮信息
                 ////游戏日志
                 //byte[] buffer0 = Encoding.UTF8.GetBytes(result);
@@ -224,7 +229,6 @@ namespace FlightChessClient
                 List<byte> list = new List<byte>();
                 list.Add(12);//P1位置
                 list.AddRange(buffer);
-                //将泛型集合转换为数组
                 socketSend.Send(list.ToArray());
 
                 //p2位置
@@ -232,7 +236,6 @@ namespace FlightChessClient
                 var list1 = new List<byte>();
                 list1.Add(13);//P2位置
                 list1.AddRange(buffer1);
-                //将泛型集合转换为数组
                 socketSend.Send(list1.ToArray());
 
                 //游戏日志
@@ -240,7 +243,6 @@ namespace FlightChessClient
                 List<byte> list2 = new List<byte>();
                 list2.Add(7);
                 list2.AddRange(buffer2);
-                //将泛型集合转换为数组
                 socketSend.Send(list2.ToArray());
 
                 //flag
@@ -258,10 +260,15 @@ namespace FlightChessClient
                 List<byte> list3 = new List<byte>();
                 list3.Add(14);
                 list3.AddRange(buffer3);
-                //将泛型集合转换为数组
                 socketSend.Send(list3.ToArray());
 
                 #endregion
+            }
+            else
+            {
+                if (anotherPlayer.Flag > 1)
+                    currentPlayer.Flag++;
+                anotherPlayer.Flag--;
             }
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
             pi2.txtPo.Text = _Player2.PlayerPo.ToString();
@@ -320,7 +327,6 @@ namespace FlightChessClient
                     {
                         break;
                     }
-                    //发送正常消息
                     if (r == 0)
                     {
                         break;
