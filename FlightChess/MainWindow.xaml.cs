@@ -89,7 +89,7 @@ namespace FlightChess
             {
                 if (btnStart.Content.ToString() == "开始游戏")
                 {
-                    btnPlay.IsEnabled = true;
+                    //btnPlay.IsEnabled = true;
                     btnStart.Content = "结束游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 100, 50) };
                     if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrEmpty(pi2.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi2.txtPlayerName.Text))
@@ -158,7 +158,7 @@ namespace FlightChess
                 }
                 else
                 {
-                    btnPlay.IsEnabled = false;
+                    //btnPlay.IsEnabled = false;
                     btnStart.Content = "开始游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
                     foreach (var o in gdMap.Children)
@@ -257,24 +257,32 @@ namespace FlightChess
                 //将泛型集合转换为数组
                 socketSend.Send(list0.ToArray());
 
-                //游戏记录
-                //var buffer2 = Encoding.UTF8.GetBytes("游戏记录");
-                //var list2 = new List<byte>();
-                //list2.Add(14);
-                //list2.AddRange(buffer2);
-                ////将泛型集合转换为数组
-                //socketSend.Send(list2.ToArray());
+                //游戏日志
+                byte[] buffer2 = Encoding.UTF8.GetBytes(result);
+                List<byte> list2 = new List<byte>();
+                list2.Add(7);
+                list2.AddRange(buffer2);
+                //将泛型集合转换为数组
+                socketSend.Send(list2.ToArray());
 
 
-                ////flag
-                //list = null;
-                //buffer = null;
-                //buffer = Encoding.UTF8.GetBytes("游戏开始");
-                //list.Add(14);
-                //list.AddRange(buffer);
-                ////将泛型集合转换为数组
-                //socketSend.Send(list.ToArray());
-                //output("游戏开始");
+                //flag
+                byte[] buffer3;
+                if (Game.CompareFlag(_Player1, _Player2) == _Player1)
+                {
+                    buffer3 = Encoding.UTF8.GetBytes("1");
+                    ChangeBtnState("1");
+                }
+                else
+                {
+                    buffer3 = Encoding.UTF8.GetBytes("0");
+                    ChangeBtnState("0");
+                }
+                List<byte> list3 = new List<byte>();
+                list3.Add(14);
+                list3.AddRange(buffer3);
+                //将泛型集合转换为数组
+                socketSend.Send(list3.ToArray());
                 #endregion
             }
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
@@ -379,7 +387,9 @@ namespace FlightChess
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
                         var tmp = s.Split('\a');
-                        output(tmp[1]);
+                        //var tmp1 = tmp[1].Split('\n000e');
+                        output(tmp[1].Substring(0,tmp[1].Length-2));
+                        ChangeBtnState(tmp[1].Substring(tmp[1].Length - 1, 1));
                         Move2(tmp[0]);
                         //output("对方目前位置" + s);
                         if (Convert.ToInt32(tmp[0]) == 99)
@@ -392,7 +402,7 @@ namespace FlightChess
                     else if (buffer[0] == 14)
                     {
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output(s);
+                        ChangeBtnState(s);
                     }
                     else if (buffer[0] == 15)//昵称
                     {
@@ -462,6 +472,23 @@ namespace FlightChess
         private void ChangeNameeAct(string msg)
         {
             pi2.txtPlayerName.Text = msg;
+        }
+        //修改按钮状态
+        private void ChangeBtnState(string msg)
+        {
+            this.btnStart.Dispatcher.Invoke(new outputDelegate(ChangeBtnStateAct), msg);
+        }
+        private void ChangeBtnStateAct(string msg)
+        {
+            if (msg == "1")
+            {
+                btnPlay.IsEnabled = true;
+            }
+            else
+            {
+                btnPlay.IsEnabled = false;
+            }
+            
         }
         #endregion
     }

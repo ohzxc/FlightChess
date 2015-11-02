@@ -157,5 +157,24 @@ namespace FlightChess
             Game.PlayerMove(player, 10);
             return (player.PlayerName + "进入是空隧道,前进10格。");
         }
+
+
+        /// <summary>
+        /// 判断谁走，true1走，false2走
+        /// </summary>
+        /// <param name="_Player1">玩家一</param>
+        /// <param name="_Player2">玩家二</param>
+        /// <returns></returns>
+        public static Player CompareFlag(Player _Player1, Player _Player2)
+        {
+            if (_Player2.Flag + _Player1.Flag > 2)
+            {
+                var tmp = (_Player1.Flag < _Player1.Flag) ? (_Player2.Flag - _Player1.Flag) : (_Player1.Flag - _Player2.Flag);
+                _Player1.Flag = (_Player1.Flag < _Player1.Flag) ? 0 : 1;
+                _Player2.Flag = (_Player1.Flag == 0) ? 1 : 0;
+            }
+            return (_Player1.Flag < _Player2.Flag) ? _Player1 : _Player2;
+            //anotherPlayer = (currentPlayer == _Player1) ? _Player2 : _Player1;
+        }
     }
 }

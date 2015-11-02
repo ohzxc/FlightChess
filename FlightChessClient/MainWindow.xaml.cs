@@ -81,7 +81,7 @@ namespace FlightChessClient
             }
         }
 
-        #region 事件
+        #region 按钮事件
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
@@ -131,7 +131,7 @@ namespace FlightChessClient
                     //初始化玩家
                     pi1.txtPlayerName.IsEnabled = false;
                     pi2.txtPlayerName.IsEnabled = false;
-                    btnPlay.IsEnabled = true;
+                    //btnPlay.IsEnabled = true;
                     //output("游戏开始！");
                     _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
                     _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
@@ -190,13 +190,7 @@ namespace FlightChessClient
             var result = string.Empty;
             if (flagMode == false)
             {
-                if (_Player2.Flag + _Player1.Flag > 2)
-                {
-                    var tmp = (_Player1.Flag < _Player1.Flag) ? (_Player2.Flag - _Player1.Flag) : (_Player1.Flag - _Player2.Flag);
-                    _Player1.Flag = (_Player1.Flag < _Player1.Flag) ? 0 : 1;
-                    _Player2.Flag = (_Player1.Flag == 0) ? 1 : 0;
-                }
-                currentPlayer = (_Player1.Flag < _Player2.Flag) ? _Player1 : _Player2;
+                currentPlayer = Game.CompareFlag(_Player1, _Player2);
                 anotherPlayer = (currentPlayer == _Player1) ? _Player2 : _Player1;
             }
             else
@@ -242,30 +236,31 @@ namespace FlightChessClient
                 socketSend.Send(list1.ToArray());
 
                 //游戏日志
-                byte[] buffer0 = Encoding.UTF8.GetBytes(result);
-                List<byte> list0 = new List<byte>();
-                list0.Add(7);
-                list0.AddRange(buffer0);
+                byte[] buffer2 = Encoding.UTF8.GetBytes(result);
+                List<byte> list2 = new List<byte>();
+                list2.Add(7);
+                list2.AddRange(buffer2);
                 //将泛型集合转换为数组
-                socketSend.Send(list0.ToArray());
-                //游戏记录
-                //var buffer2 = Encoding.UTF8.GetBytes("游戏记录");
-                //var list2 = new List<byte>();
-                //list2.Add(14);
-                //list2.AddRange(buffer2);
-                ////将泛型集合转换为数组
-                //socketSend.Send(list2.ToArray());
+                socketSend.Send(list2.ToArray());
 
+                //flag
+                byte[] buffer3;
+                if (Game.CompareFlag(_Player1, _Player2) == _Player1)
+                {
+                    buffer3 = Encoding.UTF8.GetBytes("1");
+                    ChangeBtnState("1");
+                }
+                else
+                {
+                    buffer3 = Encoding.UTF8.GetBytes("0");
+                    ChangeBtnState("0");
+                }  
+                List<byte> list3 = new List<byte>();
+                list3.Add(14);
+                list3.AddRange(buffer3);
+                //将泛型集合转换为数组
+                socketSend.Send(list3.ToArray());
 
-                ////flag
-                //list = null;
-                //buffer = null;
-                //buffer = Encoding.UTF8.GetBytes("游戏开始");
-                //list.Add(14);
-                //list.AddRange(buffer);
-                ////将泛型集合转换为数组
-                //socketSend.Send(list.ToArray());
-                //output("游戏开始");
                 #endregion
             }
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
@@ -357,13 +352,15 @@ namespace FlightChessClient
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
                         var tmp = s.Split('\a');
-                        output(tmp[1]);
+                        //var tmp1 = tmp[1].Split('\n000e');
+                        output(tmp[2].Substring(0, tmp[2].Length - 2));
+                        ChangeBtnState(tmp[2].Substring(tmp[2].Length - 1, 1));
                         Move2(tmp[0]);
                     }
                     else if (buffer[0] == 14)
                     {
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output(s);
+                        ChangeBtnState(s);
                     }
                     else if (buffer[0] == 15)//昵称
                     {
@@ -396,7 +393,7 @@ namespace FlightChessClient
         private void InitMapAct(string msg)
         {
             btnStart_Click(default(object), default(RoutedEventArgs));
-            btnPlay.IsEnabled = true;
+            //btnPlay.IsEnabled = true;
         }
         //更新P1位置
         private void Move1(string msg)
@@ -426,6 +423,23 @@ namespace FlightChessClient
         private void ChangeNameeAct(string msg)
         {
             pi1.txtPlayerName.Text = msg;
+        }
+        //修改按钮状态
+        private void ChangeBtnState(string msg)
+        {
+            this.btnStart.Dispatcher.Invoke(new outputDelegate(ChangeBtnStateAct), msg);
+        }
+        private void ChangeBtnStateAct(string msg)
+        {
+            if (msg == "0")
+            {
+                btnPlay.IsEnabled = true;
+            }
+            else
+            {
+                btnPlay.IsEnabled = false;
+            }
+
         }
         #endregion
     }
