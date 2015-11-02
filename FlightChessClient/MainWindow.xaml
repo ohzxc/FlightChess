@@ -67,10 +67,10 @@
                 <TextBox MinHeight="40" Name="tbMsg" Grid.Row="1" ToolTip="消息输入框" Margin="0,11,56,9" ></TextBox>
                 <Button Name="btnSend" Grid.Row="1" Content="发送" Margin="329,10,1,10" Click="btnSend_Click"/>
                 <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,6,0,3" HorizontalAlignment="Left" Width="190" Background="#FF64FF32"></Button>
-                <Button IsEnabled="False" Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,6,0,3" HorizontalAlignment="Right" Width="179" Click="btnPlay_Click"></Button>
+                <Button IsEnabled="False" Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,6,1,3" HorizontalAlignment="Right" Width="178" Click="btnPlay_Click"></Button>
                 <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="190" FontSize="21.333"/>
                 <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="201,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="82" FontSize="21.333"/>
-                <Button x:Name="btnLink" Content="连接" HorizontalAlignment="Left" Margin="293,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="86" Height="30" Click="btnLink_Click"/>
+                <Button x:Name="btnLink" Content="连接" HorizontalAlignment="Left" Margin="292,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="78" Height="30" Click="btnLink_Click"/>
 
             </Grid>
         </StackPanel>

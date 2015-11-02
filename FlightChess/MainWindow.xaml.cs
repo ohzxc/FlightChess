@@ -85,106 +85,117 @@ namespace FlightChess
         #region 按钮事件
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            if (btnStart.Content.ToString() == "开始游戏")
+            try
             {
-                btnPlay.IsEnabled = true;
-                btnStart.Content = "停止游戏";
-                btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 100, 50) };
-                if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrEmpty(pi2.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi2.txtPlayerName.Text))
+                if (btnStart.Content.ToString() == "开始游戏")
                 {
-                    MessageBox.Show("玩家名不能为空，请重新输入。");
-                    return;
-                }
-                #region 初始化
-                //初始化地图
-                _Map = new Map()
-                {
-                    landMine = new int[] { 5, 13, 17, 33, 38, 50, 64, 80, 94 },
-                    luckyturn = new int[] { 6, 23, 40, 55, 69, 83 },
-                    pause = new int[] { 9, 27, 60, 93 },
-                    timeTunnel = new int[] { 20, 25, 45, 63, 72, 88, 90 }
-                };
-                _Map.InitailMap();
-                if (flagMap != true)
-                {
-                    Map.DrawMap(_Map.Maps, gdMap);
-                    flagMap = true;
+                    btnPlay.IsEnabled = true;
+                    btnStart.Content = "结束游戏";
+                    btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 100, 50) };
+                    if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrEmpty(pi2.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi2.txtPlayerName.Text))
+                    {
+                        MessageBox.Show("玩家名不能为空，请重新输入。");
+                        return;
+                    }
+                    #region 初始化
+                    //初始化地图
+                    _Map = new Map()
+                    {
+                        landMine = new int[] { 5, 13, 17, 33, 38, 50, 64, 80, 94 },
+                        luckyturn = new int[] { 6, 23, 40, 55, 69, 83 },
+                        pause = new int[] { 9, 27, 60, 93 },
+                        timeTunnel = new int[] { 20, 25, 45, 63, 72, 88, 90 }
+                    };
+                    _Map.InitailMap();
+                    if (flagMap != true)
+                    {
+                        Map.DrawMap(_Map.Maps, gdMap);
+                        flagMap = true;
+                    }
+                    else
+                    {
+                        foreach (var o in gdMap.Children)
+                        {
+                            if (o is TextBox)
+                            {
+                                //gdMap.Children.Remove(o as TextBox);
+                                (o as TextBox).Visibility = Visibility.Visible;
+                            }
+                        }
+                    }
+
+                    //初始化玩家
+                    pi1.txtPlayerName.IsEnabled = false;
+                    pi2.txtPlayerName.IsEnabled = false;
+                    btnPlay.IsEnabled = true;
+                    _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
+                    _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
+                    ellPlayer1.Visibility = Visibility.Visible;
+                    ellPlayer2.Visibility = Visibility.Visible;
+                    Grid.SetZIndex(ellPlayer1, 2);
+                    Grid.SetZIndex(ellPlayer2, 2);
+                    #endregion
+                    if (flagMode == true)
+                    {
+                        //发送开局信息
+                        byte[] buffer = Encoding.UTF8.GetBytes("游戏开始");
+                        List<byte> list = new List<byte>();
+                        list.Add(11);
+                        list.AddRange(buffer);
+                        //将泛型集合转换为数组
+                        socketSend.Send(list.ToArray());
+                        //p1昵称
+                        var buffer1 = Encoding.UTF8.GetBytes(_Player1.PlayerName);
+                        var list1 = new List<byte>();
+                        list1.Add(15);//昵称
+                        list1.AddRange(buffer1);
+                        //将泛型集合转换为数组
+                        socketSend.Send(list1.ToArray());
+                    }
+                    output("游戏开始");
+                    flag = true;//已开始游戏标志
+
                 }
                 else
                 {
+                    btnPlay.IsEnabled = false;
+                    btnStart.Content = "开始游戏";
+                    btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
                     foreach (var o in gdMap.Children)
                     {
                         if (o is TextBox)
                         {
                             //gdMap.Children.Remove(o as TextBox);
-                            (o as TextBox).Visibility = Visibility.Visible;
+                            (o as TextBox).Visibility = Visibility.Hidden;
                         }
                     }
-                }
-                
-                //初始化玩家
-                pi1.txtPlayerName.IsEnabled = false;
-                pi2.txtPlayerName.IsEnabled = false;
-                btnPlay.IsEnabled = true;
-                _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
-                _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
-                ellPlayer1.Visibility = Visibility.Visible;
-                ellPlayer2.Visibility = Visibility.Visible;
-                Grid.SetZIndex(ellPlayer1, 2);
-                Grid.SetZIndex(ellPlayer2, 2);
-                #endregion
-                if (flagMode == true)
-                {
-                    //发送开局信息
-                    byte[] buffer = Encoding.UTF8.GetBytes("游戏开始");
-                    List<byte> list = new List<byte>();
-                    list.Add(11);
-                    list.AddRange(buffer);
-                    //将泛型集合转换为数组
-                    socketSend.Send(list.ToArray());
-                }
-                output("游戏开始");
-                flag = true;//已开始游戏标志
-                
-            }
-            else
-            {
-                btnPlay.IsEnabled = false;
-                btnStart.Content = "开始游戏";
-                btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
-                foreach(var o in gdMap.Children)
-                {
-                    if(o is TextBox)
+                    pi1.txtPlayerName.IsEnabled = true;
+                    pi2.txtPlayerName.IsEnabled = true;
+                    btnPlay.IsEnabled = false;
+                    Grid.SetColumn(ellPlayer1, 0);
+                    Grid.SetRow(ellPlayer1, 0);
+                    Grid.SetColumn(ellPlayer2, 0);
+                    Grid.SetRow(ellPlayer2, 0);
+                    ellPlayer1.Visibility = Visibility.Hidden;
+                    ellPlayer2.Visibility = Visibility.Hidden;
+                    _Map = null;
+                    _Player1 = null;
+                    _Player2 = null;
+                    if (flagMode == true)
                     {
-                        //gdMap.Children.Remove(o as TextBox);
-                        (o as TextBox).Visibility = Visibility.Hidden;
+                        //发送结束信息
+                        byte[] buffer = Encoding.UTF8.GetBytes("游戏结束");
+                        List<byte> list = new List<byte>();
+                        list.Add(11);
+                        list.AddRange(buffer);
+                        //将泛型集合转换为数组
+                        socketSend.Send(list.ToArray());
                     }
+                    output("游戏结束");
+                    flag = false;
                 }
-                pi1.txtPlayerName.IsEnabled = true;
-                pi2.txtPlayerName.IsEnabled = true;
-                btnPlay.IsEnabled = false;
-                Grid.SetColumn(ellPlayer1, 0);
-                Grid.SetRow(ellPlayer1, 0);
-                Grid.SetColumn(ellPlayer2, 0);
-                Grid.SetRow(ellPlayer2, 0);
-                ellPlayer1.Visibility = Visibility.Hidden;
-                ellPlayer2.Visibility = Visibility.Hidden;
-                _Map = null;
-                _Player1 = null;
-                _Player2 = null;
-                if (flagMode == true)
-                {
-                    //发送结束信息
-                    byte[] buffer = Encoding.UTF8.GetBytes("游戏结束");
-                    List<byte> list = new List<byte>();
-                    list.Add(11);
-                    list.AddRange(buffer);
-                    //将泛型集合转换为数组
-                    socketSend.Send(list.ToArray());
-                }
-                output("游戏结束");
-                flag =false;
             }
+            catch { }
             
         }
 
@@ -192,6 +203,7 @@ namespace FlightChess
         {
             Player currentPlayer;
             Player anotherPlayer;
+            var result = string.Empty;
             if (flagMode == false)
             {
                 if (_Player2.Flag + _Player1.Flag > 2)
@@ -210,14 +222,17 @@ namespace FlightChess
             }
             var num = (new Random()).Next(1, 7);
             
-            output("玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。");
-            Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
+            //output("玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。");
+            result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
+            result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
+            output(result);
             if (anotherPlayer.Flag > 1)
                 currentPlayer.Flag++;
             anotherPlayer.Flag--;
             if (flagMode == true)
             {
                 #region 发送本轮信息
+                
                 //p1位置
                 byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
                 List<byte> list = new List<byte>();
@@ -227,12 +242,20 @@ namespace FlightChess
                 socketSend.Send(list.ToArray());
 
                 //p2位置
-                var buffer1 = Encoding.UTF8.GetBytes(_Player2.PlayerPo.ToString());
-                var list1 = new List<byte>();
+                byte[] buffer1 = Encoding.UTF8.GetBytes(_Player2.PlayerPo.ToString());
+                List<byte> list1 = new List<byte>();
                 list1.Add(13);//P2位置
                 list1.AddRange(buffer1);
                 //将泛型集合转换为数组
                 socketSend.Send(list1.ToArray());
+
+                //游戏日志
+                byte[] buffer0 = Encoding.UTF8.GetBytes(result);
+                List<byte> list0 = new List<byte>();
+                list0.Add(7);
+                list0.AddRange(buffer0);
+                //将泛型集合转换为数组
+                socketSend.Send(list0.ToArray());
 
                 //游戏记录
                 //var buffer2 = Encoding.UTF8.GetBytes("游戏记录");
@@ -252,8 +275,11 @@ namespace FlightChess
                 ////将泛型集合转换为数组
                 //socketSend.Send(list.ToArray());
                 //output("游戏开始");
+                #endregion
             }
-            #endregion
+            pi1.txtPo.Text = _Player1.PlayerPo.ToString();
+            pi2.txtPo.Text = _Player2.PlayerPo.ToString();
+
 
         }
 
@@ -346,25 +372,34 @@ namespace FlightChess
                     else if (buffer[0] == 12)//p1位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output("我的目前位置" + s);
+                        //output("我的目前位置" + s);
                         Move1(s);
                     }
                     else if (buffer[0] == 13)//p2位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output("对方目前位置" + s);
-                        if (Convert.ToInt32(s) == 99)
+                        var tmp = s.Split('\a');
+                        output(tmp[1]);
+                        Move2(tmp[0]);
+                        //output("对方目前位置" + s);
+                        if (Convert.ToInt32(tmp[0]) == 99)
                         {
                             MessageBox.Show(_Player2.PlayerName + "胜利");
                             output(_Player2.PlayerName + "胜利");
                         }
-                        Move2(s);
+                        Move2(tmp[0]);
                     }
                     else if (buffer[0] == 14)
                     {
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
                         output(s);
-                    } 
+                    }
+                    else if (buffer[0] == 15)//昵称
+                    {
+                        string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
+                        _Player2.PlayerName = s;
+                        ChangeName(s);
+                    }
                 }
                 catch
                 { }
@@ -407,6 +442,7 @@ namespace FlightChess
         private void MoveAct1(string msg)
         {
             Game.PlayerMoveExt(_Player1, Convert.ToInt32(msg));
+            pi1.txtPo.Text = msg;
         }
         //更新P2位置
         private void Move2(string msg)
@@ -416,6 +452,16 @@ namespace FlightChess
         private void MoveAct2(string msg)
         {
             Game.PlayerMoveExt(_Player2, Convert.ToInt32(msg));
+            pi2.txtPo.Text = msg;
+        }
+        //修改玩家昵称
+        private void ChangeName(string msg)
+        {
+            this.btnStart.Dispatcher.Invoke(new outputDelegate(ChangeNameeAct), msg);
+        }
+        private void ChangeNameeAct(string msg)
+        {
+            pi2.txtPlayerName.Text = msg;
         }
         #endregion
     }
