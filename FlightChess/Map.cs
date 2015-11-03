@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows.Media;
 
 namespace FlightChess
 {
@@ -70,14 +71,16 @@ namespace FlightChess
             
             for (var i = 0; i < 100; i++)
             {
-                var con = new TextBox() {IsEnabled=false, Height = 46, Width = 46,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center,TextWrapping=TextWrapping.Wrap };
+                var con = new TextBox() {FontSize=17, IsEnabled=false, Height = 46, Width = 46,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center,TextWrapping=TextWrapping.Wrap };
                 if (i == 0)
                 {
                     con.Text = "起点";
+                    //con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
                 }
                 else if (i == 99)
                 {
                     con.Text = "终点";
+                    //con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
                 }
                 switch (mapdata[i])
                 {

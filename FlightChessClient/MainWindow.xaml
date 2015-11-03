@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightChessClient"
         mc:Ignorable="d"
-        Title="飞行棋" Height="546" Width="900" ResizeMode="CanMinimize" >
+        Title="飞行棋" Height="546" Width="900" ResizeMode="CanResize"  MinHeight="273" MinWidth="600" >
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="504"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="gdMap" Grid.Column="0" Height="500" Width="500" Margin="3,3,0,0">
+        <Grid x:Name="gdMap" Grid.Column="0" Height="500" Width="500" Margin="2,2,2,2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>

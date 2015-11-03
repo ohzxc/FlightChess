@@ -58,9 +58,9 @@ namespace FlightChessClient
         public MainWindow()
         {
             InitializeComponent();
-            pi1.txtPlayerName.Text = "玩家一";
+            pi1.txtPlayerName.Text = "PlayerA";
             pi1.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 0, 0) };
-            pi2.txtPlayerName.Text = "玩家二";
+            pi2.txtPlayerName.Text = "PlayerB";
             pi2.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 0, 0, 255) };
             flag = false;
             flagMap = false;
@@ -203,11 +203,9 @@ namespace FlightChessClient
                 anotherPlayer = _Player1;
             }
             var num = (new Random()).Next(1, 7);
-
             result += currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
-            
 
             if (flagMode == true)
             {

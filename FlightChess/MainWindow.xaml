@@ -5,37 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightChess"
         mc:Ignorable="d"
-        Title="飞行棋" Height="546" Width="900" ResizeMode="CanMinimize" >
+        Title="飞行棋" Height="544" Width="900" MinHeight="272" MinWidth="600" >
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="504"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="504*"></ColumnDefinition>
+            <ColumnDefinition Width="388*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="gdMap" Grid.Column="0" Height="500" Width="500" Margin="3,3,0,0">
+        <Grid x:Name="gdMap" Grid.Column="0" Margin="3,3,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" Grid.RowSpan="10" BorderThickness="1,1,1,1" BorderBrush="Black"></Border>
             <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="9" BorderThickness="0,0,0,1" BorderBrush="Black"></Border>
@@ -61,16 +60,21 @@
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Border BorderThickness="1" BorderBrush="Black" ></Border>
-                <ScrollViewer Margin="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <TextBlock Name="tbGameRecord" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Margin="5"></TextBlock>
+                <ScrollViewer Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock Name="tbGameRecord" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="0" ToolTip="游戏记录" AllowDrop="True" TextWrapping="Wrap" Margin="2"></TextBlock>
                 </ScrollViewer>
+                <Grid>
+
+                </Grid>
                 <TextBox Name="tbMsg" MinHeight="40" Grid.Row="1" ToolTip="消息输入框" Margin="0,11,56,9" ></TextBox>
                 <Button Name="btnSend" Grid.Row="1" Content="发送" Margin="329,10,1,10" Click="btnSend_Click"/>
                 <Button Name="btnStart" Click="btnStart_Click" Grid.Row="2" Content="开始游戏" Margin="0,6,0,3" HorizontalAlignment="Left" Width="182" Background="#FF64FF32"></Button>
                 <Button IsEnabled="False" Name="btnPlay" Grid.Row="2" Content="掷色子" Margin="0,6,1,3" HorizontalAlignment="Right" Width="187" Click="btnPlay_Click"></Button>
-                <TextBox IsEnabled="False" x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="182" FontSize="21.333"/>
-                <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="193,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="82" FontSize="21.333"/>
-                <Button x:Name="btnListen" Content="开始监听" HorizontalAlignment="Left" Margin="292,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="78" Height="30" Click="btnListen_Click"/>
+                <TextBox x:Name="txtIP" HorizontalAlignment="Left" Height="30" Margin="0,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="127" FontSize="21.333"/>
+                <TextBox x:Name="txtPort" HorizontalAlignment="Left" Height="30" Margin="132,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="5151" VerticalAlignment="Top" Width="82" FontSize="21.333"/>
+                <Button x:Name="btnListen" Content="监听" HorizontalAlignment="Left" Margin="219,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="78" Height="30" Click="btnListen_Click"/>
+                <Button x:Name="btnLink" Content="连接" HorizontalAlignment="Left" Margin="299,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="78" Height="30" Click="btnLink_Click"/>
+
             </Grid>
         </StackPanel>
     </Grid>
