@@ -69,7 +69,7 @@ namespace FlightChessClient
             if (MessageBox.Show("选是“单机模式”，选否联机模式", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 //单机
-                txtIP.Visibility = txtPort.Visibility = btnLink.Visibility=tbMsg.Visibility = btnSend.Visibility = Visibility.Collapsed;
+                txtIP.Visibility = txtPort.Visibility = btnLink.Visibility = tbMsg.Visibility = btnSend.Visibility = Visibility.Collapsed;
                 flagMode = false;
             }
             else
@@ -131,7 +131,7 @@ namespace FlightChessClient
                     //初始化玩家
                     pi1.txtPlayerName.IsEnabled = false;
                     pi2.txtPlayerName.IsEnabled = false;
-                    //btnPlay.IsEnabled = true;
+                    btnPlay.IsEnabled = true;
                     //output("游戏开始！");
                     _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
                     _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
@@ -216,14 +216,9 @@ namespace FlightChessClient
                     _Player2.Flag++;
                 _Player1.Flag--;
                 #region 发送本轮信息
-                ////游戏日志
-                //byte[] buffer0 = Encoding.UTF8.GetBytes(result);
-                //List<byte> list0 = new List<byte>();
-                //list0.Add(7);//P1位置
-                //list0.AddRange(buffer0);
-                ////将泛型集合转换为数组
-                //socketSend.Send(list0.ToArray());
 
+                //byte[] buffer = Encoding.UTF8.GetBytes("B" + "/" + _Player2.PlayerName + "/" + num.ToString());
+                //socketSend.Send(buffer);
                 //p1位置
                 byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
                 List<byte> list = new List<byte>();
@@ -238,30 +233,37 @@ namespace FlightChessClient
                 list1.AddRange(buffer1);
                 socketSend.Send(list1.ToArray());
 
+                Thread.Sleep(100);
                 //游戏日志
                 byte[] buffer2 = Encoding.UTF8.GetBytes(result);
                 List<byte> list2 = new List<byte>();
                 list2.Add(7);
                 list2.AddRange(buffer2);
                 socketSend.Send(list2.ToArray());
-
+                Thread.Sleep(100);
                 //flag
-                byte[] buffer3;
-                if (Game.CompareFlag(_Player1, _Player2) == _Player1)
-                {
-                    buffer3 = Encoding.UTF8.GetBytes("1");
-                    ChangeBtnState("1");
-                }
-                else
-                {
-                    buffer3 = Encoding.UTF8.GetBytes("0");
-                    ChangeBtnState("0");
-                }  
+                //byte[] buffer3;
+                //if (Game.CompareFlag(_Player1, _Player2) == _Player1)
+                //{
+                //    buffer3 = Encoding.UTF8.GetBytes("1");
+                //    //ChangeBtnState("1");
+                //}
+                //else
+                //{
+                //    buffer3 = Encoding.UTF8.GetBytes("0");
+                //    //ChangeBtnState("0");
+                //}
+                //List<byte> list3 = new List<byte>();
+                //list3.Add(14);
+                //list3.AddRange(buffer3);
+                //socketSend.Send(list3.ToArray());
                 List<byte> list3 = new List<byte>();
                 list3.Add(14);
-                list3.AddRange(buffer3);
+                list3.AddRange(Encoding.UTF8.GetBytes(_Player1.Flag.ToString()));
+                list3.AddRange(Encoding.UTF8.GetBytes("/"));
+                list3.AddRange(Encoding.UTF8.GetBytes(_Player2.Flag.ToString()));
                 socketSend.Send(list3.ToArray());
-
+                ChangeBtnState(_Player1.Flag.ToString()+"/"+ _Player2.Flag.ToString());
                 #endregion
             }
             else
@@ -335,7 +337,7 @@ namespace FlightChessClient
                     if (buffer[0] == 7)//发送正常消息
                     {
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        output("对方:" + s);
+                        output("对方：" + s);
                     }
                     else if (buffer[0] == 11)//开始，结束
                     {
@@ -359,8 +361,8 @@ namespace FlightChessClient
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
                         var tmp = s.Split('\a');
                         //var tmp1 = tmp[1].Split('\n000e');
-                        output(tmp[2].Substring(0, tmp[2].Length - 2));
-                        ChangeBtnState(tmp[2].Substring(tmp[2].Length - 1, 1));
+                        //output(tmp[2].Substring(0, tmp[2].Length - 2));
+                        //ChangeBtnState(tmp[2].Substring(tmp[2].Length - 1, 1));
                         Move2(tmp[0]);
                     }
                     else if (buffer[0] == 14)
@@ -437,7 +439,11 @@ namespace FlightChessClient
         }
         private void ChangeBtnStateAct(string msg)
         {
-            if (msg == "0")
+            var tmp = msg.Split('/');
+            _Player1.Flag = Convert.ToInt32(tmp[0]);
+            _Player2.Flag = Convert.ToInt32(tmp[1]);
+
+            if (Game.CompareFlag(_Player1, _Player2) == _Player2)
             {
                 btnPlay.IsEnabled = true;
             }
