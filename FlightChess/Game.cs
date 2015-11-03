@@ -22,7 +22,6 @@ namespace FlightChess
         {
             Game.PlayerMove(currentPlayer, num);
             var result = string.Empty;
-            //currentPlayer.PlayerPo += num;
             if (currentPlayer.PlayerPo == 99)
             {
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
@@ -157,7 +156,6 @@ namespace FlightChess
             Game.PlayerMove(player, 10);
             return (player.PlayerName + "进入是空隧道,前进10格。");
         }
-
 
         /// <summary>
         /// 判断谁走，true1走，false2走

@@ -89,7 +89,6 @@ namespace FlightChess
             {
                 if (btnStart.Content.ToString() == "开始游戏")
                 {
-                    //btnPlay.IsEnabled = true;
                     btnStart.Content = "结束游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 100, 50) };
                     if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrEmpty(pi2.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi2.txtPlayerName.Text))
@@ -118,7 +117,6 @@ namespace FlightChess
                         {
                             if (o is TextBox)
                             {
-                                //gdMap.Children.Remove(o as TextBox);
                                 (o as TextBox).Visibility = Visibility.Visible;
                             }
                         }
@@ -142,14 +140,12 @@ namespace FlightChess
                         List<byte> list = new List<byte>();
                         list.Add(11);
                         list.AddRange(buffer);
-                        //将泛型集合转换为数组
                         socketSend.Send(list.ToArray());
                         //p1昵称
                         var buffer1 = Encoding.UTF8.GetBytes(_Player1.PlayerName);
                         var list1 = new List<byte>();
                         list1.Add(15);//昵称
                         list1.AddRange(buffer1);
-                        //将泛型集合转换为数组
                         socketSend.Send(list1.ToArray());
                     }
                     output("游戏开始");
@@ -158,14 +154,12 @@ namespace FlightChess
                 }
                 else
                 {
-                    //btnPlay.IsEnabled = false;
                     btnStart.Content = "开始游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
                     foreach (var o in gdMap.Children)
                     {
                         if (o is TextBox)
                         {
-                            //gdMap.Children.Remove(o as TextBox);
                             (o as TextBox).Visibility = Visibility.Hidden;
                         }
                     }
@@ -188,7 +182,6 @@ namespace FlightChess
                         List<byte> list = new List<byte>();
                         list.Add(11);
                         list.AddRange(buffer);
-                        //将泛型集合转换为数组
                         socketSend.Send(list.ToArray());
                     }
                     output("游戏结束");
@@ -221,8 +214,6 @@ namespace FlightChess
                 anotherPlayer = _Player2;
             }
             var num = (new Random()).Next(1, 7);
-            
-            //output("玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。");
             result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
@@ -249,27 +240,15 @@ namespace FlightChess
                 list1.AddRange(buffer1);
                 //将泛型集合转换为数组
                 socketSend.Send(list1.ToArray());
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 //游戏日志
                 byte[] buffer2 = Encoding.UTF8.GetBytes(result);
                 List<byte> list2 = new List<byte>();
                 list2.Add(7);
                 list2.AddRange(buffer2);
                 socketSend.Send(list2.ToArray());
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 //flag
-
-                //byte[] buffer3;
-                //if (Game.CompareFlag(_Player1, _Player2) == _Player1)
-                //{
-                //    buffer3 = Encoding.UTF8.GetBytes("1");
-                //    //ChangeBtnState("1");
-                //}
-                //else
-                //{
-                //    buffer3 = Encoding.UTF8.GetBytes("0");
-                //    //ChangeBtnState("0");
-                //}
                 List<byte> list3 = new List<byte>();
                 list3.Add(14);
                 list3.AddRange(Encoding.UTF8.GetBytes(_Player1.Flag.ToString()));
@@ -318,7 +297,6 @@ namespace FlightChess
                 List<byte> list = new List<byte>();
                 list.Add(7);
                 list.AddRange(buffer);
-                //将泛型集合转换为数组
                 socketSend.Send(list.ToArray());
                 output("我：" + str);
                 tbMsg.Text = "";

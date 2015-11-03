@@ -22,7 +22,6 @@ namespace FlightChessClient
         {
             Game.PlayerMove(currentPlayer, num);
             var result = string.Empty;
-            //currentPlayer.PlayerPo += num;
             if (currentPlayer.PlayerPo == 99)
             {
                 MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了

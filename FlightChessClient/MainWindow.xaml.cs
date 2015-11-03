@@ -75,7 +75,7 @@ namespace FlightChessClient
             else
             {
                 //联机
-                btnStart.Visibility = Visibility.Hidden;
+                //btnStart.Visibility = Visibility.Hidden;
                 flagMode = true;
                 pi1.IsEnabled = false;
             }
@@ -156,7 +156,7 @@ namespace FlightChessClient
                     flag = true;//已开始游戏标志
                     #endregion
                 }
-                else
+                else  if(flagMode==false)
                 {
                     btnStart.Content = "开始游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
@@ -204,7 +204,6 @@ namespace FlightChessClient
             }
             var num = (new Random()).Next(1, 7);
 
-            //output("玩家"+currentPlayer.PlayerName+"掷出了"+ num.ToString()+"点。");
             result += currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
@@ -217,8 +216,7 @@ namespace FlightChessClient
                 _Player1.Flag--;
                 #region 发送本轮信息
 
-                //byte[] buffer = Encoding.UTF8.GetBytes("B" + "/" + _Player2.PlayerName + "/" + num.ToString());
-                //socketSend.Send(buffer);
+                
                 //p1位置
                 byte[] buffer = Encoding.UTF8.GetBytes(_Player1.PlayerPo.ToString());
                 List<byte> list = new List<byte>();
@@ -233,30 +231,15 @@ namespace FlightChessClient
                 list1.AddRange(buffer1);
                 socketSend.Send(list1.ToArray());
 
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 //游戏日志
                 byte[] buffer2 = Encoding.UTF8.GetBytes(result);
                 List<byte> list2 = new List<byte>();
                 list2.Add(7);
                 list2.AddRange(buffer2);
                 socketSend.Send(list2.ToArray());
-                Thread.Sleep(100);
+                Thread.Sleep(50);
                 //flag
-                //byte[] buffer3;
-                //if (Game.CompareFlag(_Player1, _Player2) == _Player1)
-                //{
-                //    buffer3 = Encoding.UTF8.GetBytes("1");
-                //    //ChangeBtnState("1");
-                //}
-                //else
-                //{
-                //    buffer3 = Encoding.UTF8.GetBytes("0");
-                //    //ChangeBtnState("0");
-                //}
-                //List<byte> list3 = new List<byte>();
-                //list3.Add(14);
-                //list3.AddRange(buffer3);
-                //socketSend.Send(list3.ToArray());
                 List<byte> list3 = new List<byte>();
                 list3.Add(14);
                 list3.AddRange(Encoding.UTF8.GetBytes(_Player1.Flag.ToString()));
@@ -264,6 +247,10 @@ namespace FlightChessClient
                 list3.AddRange(Encoding.UTF8.GetBytes(_Player2.Flag.ToString()));
                 socketSend.Send(list3.ToArray());
                 ChangeBtnState(_Player1.Flag.ToString()+"/"+ _Player2.Flag.ToString());
+
+                Thread.Sleep(50);
+                byte[] buffer4 = Encoding.UTF8.GetBytes("B" + "/" + _Player2.PlayerName + "/" + num.ToString());
+                socketSend.Send(buffer4);
                 #endregion
             }
             else
@@ -348,7 +335,6 @@ namespace FlightChessClient
                     else if (buffer[0] == 12)//p1位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        //output("对方目前位置" + s);
                         if (Convert.ToInt32(s) == 99)
                         {
                             MessageBox.Show(_Player1.PlayerName + "胜利");
@@ -359,11 +345,7 @@ namespace FlightChessClient
                     else if (buffer[0] == 13)//p2位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        var tmp = s.Split('\a');
-                        //var tmp1 = tmp[1].Split('\n000e');
-                        //output(tmp[2].Substring(0, tmp[2].Length - 2));
-                        //ChangeBtnState(tmp[2].Substring(tmp[2].Length - 1, 1));
-                        Move2(tmp[0]);
+                        Move2(s);
                     }
                     else if (buffer[0] == 14)
                     {
@@ -375,6 +357,16 @@ namespace FlightChessClient
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
                         _Player1.PlayerName = s;
                         ChangeName(s);
+                    }
+                    else if (buffer[0] == 65)//昵称
+                    {
+                        string s = Encoding.UTF8.GetString(buffer, 2, r - 2);
+                        var tmp = s.Split('/');
+                        Move1(tmp[0]);
+                        _Player1.PlayerName = tmp[1];
+                        ChangeName(tmp[1]);
+                        output("对方掷了" + tmp[2] + "点。");
+                        Move2(tmp[3]);
                     }
                 }
                 catch
@@ -449,7 +441,7 @@ namespace FlightChessClient
             }
             else
             {
-                btnPlay.IsEnabled = false;
+                btnPlay.IsEnabled = true;
             }
 
         }
