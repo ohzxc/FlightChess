@@ -42,19 +42,19 @@ namespace FlightChess
         {
             foreach(int o in luckyturn)
             {
-                Maps[o-1] = 1;
+                Maps[o] = 1;
             }
             foreach (int o in landMine)
             {
-                Maps[o-1] = 2;
+                Maps[o] = 2;
             }
             foreach (int o in pause)
             {
-                Maps[o-1] = 3;
+                Maps[o] = 3;
             }
             foreach (int o in timeTunnel)
             {
-                Maps[o-1] = 4;
+                Maps[o] = 4;
             }
         }
         /// <summary>
