@@ -71,15 +71,20 @@ namespace FlightChess
             if (MessageBox.Show("选是“单机模式”，选否联机模式", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 //单机
-                txtIP.Visibility = txtPort.Visibility = btnListen.Visibility=tbMsg.Visibility=btnSend.Visibility = Visibility.Collapsed;
+                txtIP.Visibility = txtPort.Visibility = btnListen.Visibility=tbMsg.Visibility= btnSend.Visibility =btnLink.Visibility= Visibility.Collapsed;
                 flagMode = false;
+                pi1.txtPlayerName.Text = "PlayerA";
+                pi2.txtPlayerName.Text = "PlayerB";
             }
             else
             {
                 //联机
                 btnStart.IsEnabled = false;
                 flagMode = true;
-                pi2.IsEnabled = false;
+                pi1.txtPlayerName.Text = "你的昵称";
+                pi2.txtPlayerName.Text = "对方昵称";
+                pi1.txtPlayerName.IsEnabled = true;
+                pi2.txtPlayerName.IsEnabled = false;
             }
         }
 
@@ -135,7 +140,7 @@ namespace FlightChess
                     Grid.SetZIndex(ellPlayer2, 2);
                     #endregion
 
-                    if (flagMode == true&&flagEnd==true)
+                    if (flagMode == true && flagEnd==true)
                     {
                         //发送开局信息
                         var buffer = Encoding.UTF8.GetBytes("游戏开始");
@@ -143,12 +148,14 @@ namespace FlightChess
                         list.Add(11);
                         list.AddRange(buffer);
                         socketSend.Send(list.ToArray());
-                        //p1昵称
-                        var buffer1 = Encoding.UTF8.GetBytes(_Player1.PlayerName);
-                        var list1 = new List<byte>();
-                        list1.Add(15);//昵称
-                        list1.AddRange(buffer1);
-                        socketSend.Send(list1.ToArray());
+                        
+                    }
+                    else if (flagMode == true && flagEnd == false)
+                    {
+                        btnPlay.IsEnabled = false;
+                        _Player1 = new Player() { PlayerName = pi2.txtPlayerName.Text.Trim(), PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
+                        _Player2 = new Player() { PlayerName = pi1.txtPlayerName.Text.Trim(), PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
+                        
                     }
                     output("游戏开始");
                     flag = true;//已开始游戏标志
@@ -167,7 +174,8 @@ namespace FlightChess
                         }
                     }
                     pi1.txtPlayerName.IsEnabled = true;
-                    pi2.txtPlayerName.IsEnabled = false;
+                    if (flagMode == false)
+                        pi2.txtPlayerName.IsEnabled = true;
                     btnPlay.IsEnabled = false;
                     Grid.SetColumn(ellPlayer1, 0);
                     Grid.SetRow(ellPlayer1, 0);
@@ -186,6 +194,10 @@ namespace FlightChess
                         list.Add(11);
                         list.AddRange(buffer);
                         socketSend.Send(list.ToArray());
+                    }
+                    else if (flagMode == true&&flagEnd == false)
+                    {
+                        pi2.txtPlayerName.IsEnabled = false;
                     }
                     output("游戏结束");
                     flag = false;
@@ -218,15 +230,26 @@ namespace FlightChess
             }
             #endregion
             var num = (new Random()).Next(1, 7);
-            result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
+            result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
+            if( (currentPlayer.Flag < 1)&&(anotherPlayer.Flag > 1))
+            {
+                currentPlayer.Flag=0;
+                anotherPlayer.Flag=1;
+            }
+            else if ((currentPlayer.Flag > 1) && (anotherPlayer.Flag > 1))
+            {
+                anotherPlayer.Flag = 0;
+                currentPlayer.Flag = 1;
+            }
+            else
+            {
+                currentPlayer.Flag++;
+                anotherPlayer.Flag--;
+            }
             if (flagMode == true)
             {
-                if (_Player2.Flag > 1)
-                    _Player1.Flag++;
-                _Player2.Flag--;
-                
                 #region 发送本轮信息
 
                 //p1位置
@@ -263,12 +286,6 @@ namespace FlightChess
                 ChangeBtnState(_Player1.Flag.ToString() + "/" + _Player2.Flag.ToString());
                 #endregion
             }
-            else
-            {
-                if (anotherPlayer.Flag > 1)
-                    currentPlayer.Flag++;
-                anotherPlayer.Flag--;
-            }
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
             pi2.txtPo.Text = _Player2.PlayerPo.ToString();
 
@@ -278,7 +295,11 @@ namespace FlightChess
         {
             try
             {
-               
+                if (String.IsNullOrEmpty(pi1.txtPlayerName.Text)  || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text)|| pi1.txtPlayerName.Text.Trim()=="你的昵称")
+                {
+                    MessageBox.Show("你的昵称不合法，请重新输入。");
+                    return;
+                }
                 var socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 var ip = IPAddress.Parse(txtIP.Text);
                 IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
@@ -288,9 +309,10 @@ namespace FlightChess
 
                 #region 主机 
                 flagEnd = true;
-                pi1.txtPlayerName.Text = "PlayerA";
+                //pi1.txtPlayerName.Text = "PlayerA";
+                
                 pi1.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 0, 0) };
-                pi2.txtPlayerName.Text = "PlayerB";
+                //pi2.txtPlayerName.Text = "PlayerB";
                 pi2.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 0, 0, 255) };
                 #endregion
                 var th = new Thread(Listen);
@@ -304,17 +326,17 @@ namespace FlightChess
         {
             try
             {
-                //if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text))
-                //{
-                //    MessageBox.Show("昵称不能为空，请重新输入。");
-                //    return;
-                //}
+                if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || pi1.txtPlayerName.Text.Trim() == "你的昵称")
+                {
+                    MessageBox.Show("你的昵称不合法，请重新输入。");
+                    return;
+                }
                 socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 var ip = IPAddress.Parse(txtIP.Text);
                 IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
                 socketSend.Connect(point);
                 output("连接成功.");
-
+                pi1_LostFocus(default(object), default(RoutedEventArgs));
                 #region 客机  
                 flagEnd = false;
                 btnStart.IsEnabled = false;
@@ -322,9 +344,8 @@ namespace FlightChess
                 {
                     txtIP.Visibility = txtPort.Visibility = btnListen.Visibility = btnLink.Visibility = Visibility.Collapsed;
                 }
-                pi1.txtPlayerName.Text = "PlayerB";
                 pi1.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 0, 0, 255) };
-                pi2.txtPlayerName.Text = "PlayerA";
+                //pi2.txtPlayerName.Text = "未知";
                 pi2.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 0, 0) };
                 #endregion
                 var th = new Thread(Recive);
@@ -413,13 +434,13 @@ namespace FlightChess
                     else if (buffer[0] == 13)//p2位置
                     {
                         var s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        var tmp = s.Split('\a');
-                        if (Convert.ToInt32(tmp[0]) == 99)
+                        //var tmp = s.Split('\a');
+                        if (Convert.ToInt32(s) == 99)
                         {
                             MessageBox.Show(_Player2.PlayerName + "胜利");
                             output(_Player2.PlayerName + "胜利");
                         }
-                        Move2(tmp[0]);
+                        Move2(s);
                     }
                     else if (buffer[0] == 14)
                     {
@@ -429,7 +450,7 @@ namespace FlightChess
                     else if (buffer[0] == 15)//昵称
                     {
                         string s = Encoding.UTF8.GetString(buffer, 1, r - 1);
-                        _Player2.PlayerName = s;
+                        //_Player2.PlayerName = s;
                         ChangeName(s);
                     }
                 }
@@ -463,6 +484,7 @@ namespace FlightChess
             {
                 txtIP.Visibility = txtPort.Visibility = btnListen.Visibility=btnLink.Visibility = Visibility.Collapsed;
             }
+            pi1_LostFocus(default(object), default(RoutedEventArgs));
         }
         //更新P1位置
         private void Move1(string msg)
@@ -472,7 +494,15 @@ namespace FlightChess
         private void MoveAct1(string msg)
         {
             Game.PlayerMoveExt(_Player1, Convert.ToInt32(msg));
-            pi1.txtPo.Text = msg;
+            if (flagEnd == true)
+            {
+               pi1.txtPo.Text = msg;
+            }
+            else
+            {
+                pi2.txtPo.Text = msg;
+            }
+            
         }
         //更新P2位置
         private void Move2(string msg)
@@ -482,7 +512,14 @@ namespace FlightChess
         private void MoveAct2(string msg)
         {
             Game.PlayerMoveExt(_Player2, Convert.ToInt32(msg));
-            pi2.txtPo.Text = msg;
+            if (flagEnd == true)
+            {
+                pi2.txtPo.Text = msg;
+            }
+            else
+            {
+                pi1.txtPo.Text = msg;
+            }
         }
         //修改玩家昵称
         private void ChangeName(string msg)
@@ -491,7 +528,7 @@ namespace FlightChess
         }
         private void ChangeNameeAct(string msg)
         {
-            pi2.txtPlayerName.Text = msg;
+            pi2.txtPlayerName.Text = msg;          
         }
         //修改按钮状态
         private void ChangeBtnState(string msg)
@@ -501,10 +538,10 @@ namespace FlightChess
         private void ChangeBtnStateAct(string msg)
         {
             var tmp = msg.Split('/');
-            _Player1.Flag = Convert.ToInt32(tmp[1]);
-            _Player2.Flag = Convert.ToInt32(tmp[0]);
+            _Player1.Flag = Convert.ToInt32(tmp[0]);
+            _Player2.Flag = Convert.ToInt32(tmp[1]);
 
-            if (Game.CompareFlag(_Player1, _Player2) == _Player1)
+            if ((Game.CompareFlag(_Player1, _Player2) == _Player1&&flagEnd==true)  ||((Game.CompareFlag(_Player1, _Player2) == _Player2 && flagEnd == false)))
             {
                 btnPlay.IsEnabled = true;
             }
@@ -512,6 +549,7 @@ namespace FlightChess
             {
                 btnPlay.IsEnabled = false;
             }
+
 
         }
         //初始化地图
@@ -524,8 +562,25 @@ namespace FlightChess
             btnStart_Click(default(object), default(RoutedEventArgs));
             //btnPlay.IsEnabled = true;
         }
+
         #endregion
 
+        private void pi1_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //p1昵称
+            try
+            {
+                if (flagMode == false) return;
+                var buffer1 = Encoding.UTF8.GetBytes(pi1.txtPlayerName.Text);
+                var list1 = new List<byte>();
+                list1.Add(15);//昵称
+                list1.AddRange(buffer1);
+                socketSend.Send(list1.ToArray());
+            }
+            catch
+            {
 
+            }
+        }
     }
 }

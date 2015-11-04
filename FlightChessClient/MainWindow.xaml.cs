@@ -203,7 +203,7 @@ namespace FlightChessClient
                 anotherPlayer = _Player1;
             }
             var num = (new Random()).Next(1, 7);
-            result += currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。\n";
+            result += currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。";
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
 
