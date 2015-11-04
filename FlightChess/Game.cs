@@ -24,14 +24,14 @@ namespace FlightChess
             var result = string.Empty;
             if (currentPlayer.PlayerPo == 99)
             {
-                MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
-                return currentPlayer.PlayerName + "赢了，游戏结束\n";
+                MessageBox.Show(currentPlayer.PlayerName + "赢了");//赢了
+                return currentPlayer.PlayerName + "赢了。";
             }
             if (currentPlayer.PlayerPo == anotherPlayer.PlayerPo&& currentPlayer.PlayerPo!=0)
             {
                 Game.PlayerMove(anotherPlayer, -6);
                 //PlayGame(map, anotherPlayer, currentPlayer, 0);
-                result+=(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！\n");         
+                result+=(anotherPlayer.PlayerName+"被"+currentPlayer.PlayerName+"踩了，后退6格！");         
             }
             switch (map.Maps[currentPlayer.PlayerPo])
             {
@@ -53,8 +53,8 @@ namespace FlightChess
             }
             if (currentPlayer.PlayerPo == 99)
             {
-                MessageBox.Show(currentPlayer.PlayerName + "赢了，游戏结束");//赢了
-                return result+ currentPlayer.PlayerName + "赢了，游戏结束\n";
+                MessageBox.Show(currentPlayer.PlayerName + "赢了");//赢了
+                return result+ currentPlayer.PlayerName + "赢了。";
             }
             return result;
         }
@@ -107,7 +107,7 @@ namespace FlightChess
             if (MessageBox.Show("选是轰炸玩家，对方退6格，选否玩家交换位置", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 Game.PlayerMove(anotherPlayer, -6);
-                return (currentPlayer.PlayerName + "踩到幸运转轮，并且选择了轰炸玩家"+anotherPlayer.PlayerName+"。");
+                return (currentPlayer.PlayerName + "踩到幸运转轮，并且选择了轰炸"+anotherPlayer.PlayerName+"。");
                 //Game.UpdateUiPo(anotherPlayer);
             }
             else

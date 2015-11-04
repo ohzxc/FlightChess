@@ -75,12 +75,12 @@ namespace FlightChess
                 if (i == 0)
                 {
                     con.Text = "起点";
-                    //con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
+                    con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
                 }
                 else if (i == 99)
                 {
                     con.Text = "终点";
-                    //con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
+                    con.Foreground = new SolidColorBrush() { Color = Color.FromArgb(255, 225, 0, 0) };
                 }
                 switch (mapdata[i])
                 {

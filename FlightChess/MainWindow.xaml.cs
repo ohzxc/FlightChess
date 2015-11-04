@@ -131,6 +131,11 @@ namespace FlightChess
                     //初始化玩家
                     pi1.txtPlayerName.IsEnabled = false;
                     pi2.txtPlayerName.IsEnabled = false;
+                    if(flagMode==false)
+                    {
+                        pi1.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 255, 0, 0) };
+                        pi2.ellAvatar.Fill = new SolidColorBrush() { Color = Color.FromArgb(255, 0, 0, 255) };
+                    }
                     btnPlay.IsEnabled = true;
                     _Player1 = new Player() { PlayerName = pi1.txtPlayerName.Text, PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
                     _Player2 = new Player() { PlayerName = pi2.txtPlayerName.Text, PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
@@ -289,6 +294,10 @@ namespace FlightChess
             pi1.txtPo.Text = _Player1.PlayerPo.ToString();
             pi2.txtPo.Text = _Player2.PlayerPo.ToString();
 
+            if (_Player1.PlayerPo == 99 || _Player2.PlayerPo == 99)
+            {
+                btnPlay.IsEnabled = false;
+            }
         }
 
         private void btnListen_Click(object sender, RoutedEventArgs e)
@@ -494,6 +503,8 @@ namespace FlightChess
         private void MoveAct1(string msg)
         {
             Game.PlayerMoveExt(_Player1, Convert.ToInt32(msg));
+            if (Convert.ToInt32(msg) == 99)
+                btnPlay.IsEnabled = false;
             if (flagEnd == true)
             {
                pi1.txtPo.Text = msg;
@@ -512,6 +523,8 @@ namespace FlightChess
         private void MoveAct2(string msg)
         {
             Game.PlayerMoveExt(_Player2, Convert.ToInt32(msg));
+            if (Convert.ToInt32(msg) == 99)
+                btnPlay.IsEnabled = false;
             if (flagEnd == true)
             {
                 pi2.txtPo.Text = msg;
