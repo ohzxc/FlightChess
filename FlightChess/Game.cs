@@ -49,7 +49,7 @@ namespace FlightChess
                     result += TimeTunnel(currentPlayer);
                     //PlayGame(map, currentPlayer, anotherPlayer, 0);
                     break;
-                default: result += currentPlayer.PlayerName + "踩到方块。"; break;
+                default: result += "踩到方块。"; break;
             }
             if (currentPlayer.PlayerPo == 99)
             {
@@ -107,7 +107,7 @@ namespace FlightChess
             if (MessageBox.Show("选是轰炸玩家，对方退6格，选否玩家交换位置", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 Game.PlayerMove(anotherPlayer, -6);
-                return (currentPlayer.PlayerName + "踩到幸运转轮，并且选择了轰炸"+anotherPlayer.PlayerName+"。");
+                return ("踩到幸运转轮，并且选择了轰炸"+anotherPlayer.PlayerName+"。");
                 //Game.UpdateUiPo(anotherPlayer);
             }
             else
@@ -118,7 +118,7 @@ namespace FlightChess
                 anotherPlayer.PlayerPo = tmp;
                 Game.PlayerMove(currentPlayer, 0);
                 Game.PlayerMove(anotherPlayer, 0);
-                return (currentPlayer.PlayerName + "踩到幸运转轮，并且选择了交换位置。");
+                return "踩到幸运转轮，并且选择了交换位置。";
             }    
         }
 
@@ -131,7 +131,7 @@ namespace FlightChess
             Game.PlayerMove(player, 0);
             MessageBox.Show("玩家踩到地雷！退6格");
             Game.PlayerMove(player, -6);
-            return (player.PlayerName + "踩到地雷，后退6格。");
+            return "踩到地雷，后退6格。";
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace FlightChess
         {
             player.Flag++;
             MessageBox.Show("踩到暂停");
-            return (player.PlayerName + "踩到暂停。");
+            return "踩到暂停。";
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace FlightChess
             Game.PlayerMove(player, 0);
             MessageBox.Show("玩家进入时空隧道，前进10格！");
             Game.PlayerMove(player, 10);
-            return (player.PlayerName + "进入是空隧道,前进10格。");
+            return "进入是空隧道,前进10格。";
         }
 
         /// <summary>

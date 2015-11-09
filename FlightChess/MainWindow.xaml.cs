@@ -61,26 +61,31 @@ namespace FlightChess
             InitializeComponent();
 
             flagMap = false;
-
+            //默认单机
+            flagMode = false;
+            pi1.txtPlayerName.Text = "PlayerA";
+            pi2.txtPlayerName.Text = "PlayerB";
+            pi1.txtPlayerName.IsEnabled = true;
+            pi2.txtPlayerName.IsEnabled = true;
             //选择游戏模式
-            if (MessageBox.Show("选是“单机模式”，选否联机模式", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                //单机
-                txtIP.Visibility = txtPort.Visibility = btnListen.Visibility=tbMsg.Visibility= btnSend.Visibility =btnLink.Visibility= Visibility.Collapsed;
-                flagMode = false;
-                pi1.txtPlayerName.Text = "PlayerA";
-                pi2.txtPlayerName.Text = "PlayerB";
-            }
-            else
-            {
-                //联机
-                //btnStart.IsEnabled = false;
-                flagMode = true;
-                pi1.txtPlayerName.Text = "你的昵称";
-                pi2.txtPlayerName.Text = "";
-                pi1.txtPlayerName.IsEnabled = true;
-                pi2.txtPlayerName.IsEnabled = false;
-            }
+            //if (MessageBox.Show("选是“单机模式”，选否联机模式", "请选择操作", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            //{
+            //    //单机
+            //    txtIP.Visibility = txtPort.Visibility = btnListen.Visibility=tbMsg.Visibility= btnSend.Visibility =btnLink.Visibility= Visibility.Collapsed;
+            //    flagMode = false;
+            //    pi1.txtPlayerName.Text = "PlayerA";
+            //    pi2.txtPlayerName.Text = "PlayerB";
+            //}
+            //else
+            //{
+            //    //联机
+            //    btnStart.IsEnabled = false;
+            //    flagMode = true;
+            //    pi1.txtPlayerName.Text = "你的昵称";
+            //    pi2.txtPlayerName.Text = "";
+            //    pi1.txtPlayerName.IsEnabled = true;
+            //    pi2.txtPlayerName.IsEnabled = false;
+            //}
         }
 
         #region 事件
@@ -88,6 +93,10 @@ namespace FlightChess
         {
             try
             {
+                if (txtIP.Visibility == Visibility.Visible)
+                {
+                    txtIP.Visibility = txtPort.Visibility = btnListen.Visibility = tbMsg.Visibility = btnSend.Visibility = btnLink.Visibility = Visibility.Collapsed;
+                }
                 if (btnStart.Content.ToString() == "开始游戏")
                 {
                     #region 判空
@@ -158,7 +167,7 @@ namespace FlightChess
                     }
                     else if (flagMode == true && flagEnd == false) //客机
                     {
-                        //btnPlay.IsEnabled = false;
+                        btnPlay.IsEnabled = false;
                         _Player1 = new Player() { PlayerName = pi2.txtPlayerName.Text.Trim(), PlayerPo = 0, Flag = 0, PlayerUI = ellPlayer1 };
                         _Player2 = new Player() { PlayerName = pi1.txtPlayerName.Text.Trim(), PlayerPo = 0, Flag = 1, PlayerUI = ellPlayer2 };
                         
@@ -173,6 +182,12 @@ namespace FlightChess
                     btnStart.Content = "开始游戏";
                     btnStart.Background = new SolidColorBrush() { Color = Color.FromArgb(255, 100, 255, 50) };
                     #endregion
+
+                    if (txtIP.Visibility==Visibility.Collapsed)
+                    {
+                        txtIP.Visibility = txtPort.Visibility = btnListen.Visibility = tbMsg.Visibility = btnSend.Visibility = btnLink.Visibility = Visibility.Visible;
+                    }
+                    pi1.txtPo.Text = pi2.txtPo.Text = "0";
 
                     #region 隐藏地图,角色归位,清空变量
                     foreach (var o in gdMap.Children)
@@ -248,7 +263,7 @@ namespace FlightChess
             #endregion
 
             var num = (new Random()).Next(1, 7);//掷骰子 随机数                                 
-            result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点。"; 
+            result +=  currentPlayer.PlayerName + "掷出了" + num.ToString() + "点，"; 
             result += Game.PlayGame(_Map, currentPlayer, anotherPlayer, num);
             output(result);
 
@@ -340,11 +355,13 @@ namespace FlightChess
         {
             try
             {
-                if (string.IsNullOrEmpty(pi1.txtPlayerName.Text)  || string.IsNullOrWhiteSpace(pi1.txtPlayerName.Text)|| pi1.txtPlayerName.Text.Trim()=="你的昵称")
+                flagMode = true;
+                if (string.IsNullOrEmpty(pi1.txtPlayerName.Text)  || string.IsNullOrWhiteSpace(pi1.txtPlayerName.Text))
                 {
                     MessageBox.Show("你的昵称不合法，请重新输入。");
                     return;
                 }
+                pi2.txtPlayerName.IsEnabled = false;
                 var socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 var ip = IPAddress.Parse(txtIP.Text);
                 IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
@@ -368,11 +385,13 @@ namespace FlightChess
         {
             try
             {
-                if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text) || pi1.txtPlayerName.Text.Trim() == "你的昵称")
+                flagMode = true;
+                if (String.IsNullOrEmpty(pi1.txtPlayerName.Text) || String.IsNullOrWhiteSpace(pi1.txtPlayerName.Text))
                 {
                     MessageBox.Show("你的昵称不合法，请重新输入。");
                     return;
                 }
+                pi2.txtPlayerName.IsEnabled = false;
                 socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 var ip = IPAddress.Parse(txtIP.Text);
                 IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
@@ -381,7 +400,7 @@ namespace FlightChess
                 pi1_LostFocus(default(object), default(RoutedEventArgs));
                 #region 客机  
                 flagEnd = false;
-                //btnStart.IsEnabled = false;
+                btnStart.IsEnabled = false;
                 if (txtIP.Visibility == Visibility.Visible)
                 {
                     txtIP.Visibility = txtPort.Visibility = btnListen.Visibility = btnLink.Visibility = Visibility.Collapsed;
@@ -400,13 +419,14 @@ namespace FlightChess
         {
             try
             {
+                if (tbMsg.Text.Trim() == "") return;
                 string str = "对方："+ tbMsg.Text.Trim();
                 byte[] buffer = Encoding.UTF8.GetBytes(str);
                 List<byte> list = new List<byte>();
                 list.Add(7);
                 list.AddRange(buffer);
                 socketSend.Send(list.ToArray());
-                output("我：" + str);
+                output("我：" + tbMsg.Text.Trim());
                 tbMsg.Text = "";
             }
             catch { }
@@ -613,7 +633,7 @@ namespace FlightChess
             }
             else
             {
-                //btnPlay.IsEnabled = false;
+                btnPlay.IsEnabled = false;
             }
 
 
