@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 namespace FlightChess
 {
@@ -233,8 +234,19 @@ namespace FlightChess
                     output("游戏结束");
                 }
             }
-            catch { }
-            
+            catch (Exception ex)
+            {
+                if (!File.Exists("errorlogs.txt"))
+                {
+                    File.CreateText("errorlogs.txt").Close();
+                }
+                var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                var sw = new StreamWriter(fs, Encoding.Default);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                sw.Close();
+                fs.Close();
+            }
+
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
@@ -378,7 +390,18 @@ namespace FlightChess
                 th.IsBackground = true;
                 th.Start(socketWatch);
             }
-            catch  { }
+            catch (Exception ex)
+            {
+                if (!File.Exists("errorlogs.txt"))
+                {
+                    File.CreateText("errorlogs.txt").Close();
+                }
+                var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                var sw = new StreamWriter(fs, Encoding.Default);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                sw.Close();
+                fs.Close();
+            }
         }
 
         private void btnLink_Click(object sender, RoutedEventArgs e)
@@ -412,7 +435,18 @@ namespace FlightChess
                 th.IsBackground = true;
                 th.Start(socketSend);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                if (!File.Exists("errorlogs.txt"))
+                {
+                    File.CreateText("errorlogs.txt").Close();
+                }
+                var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                var sw = new StreamWriter(fs, Encoding.Default);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                sw.Close();
+                fs.Close();
+            }
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
@@ -429,7 +463,18 @@ namespace FlightChess
                 output("我：" + tbMsg.Text.Trim());
                 tbMsg.Text = "";
             }
-            catch { }
+            catch (Exception ex)
+            {
+                if (!File.Exists("errorlogs.txt"))
+                {
+                    File.CreateText("errorlogs.txt").Close();
+                }
+                var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                var sw = new StreamWriter(fs, Encoding.Default);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                sw.Close();
+                fs.Close();
+            }
         }
 
         private void pi1_LostFocus(object sender, RoutedEventArgs e)
@@ -443,9 +488,17 @@ namespace FlightChess
                 list1.AddRange(buffer1);
                 socketSend.Send(list1.ToArray());
             }
-            catch
+            catch (Exception ex)
             {
-
+                if (!File.Exists("errorlogs.txt"))
+                {
+                    File.CreateText("errorlogs.txt").Close();
+                }
+                var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                var sw = new StreamWriter(fs, Encoding.Default);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                sw.Close();
+                fs.Close();
             }
         }
 
@@ -469,8 +522,18 @@ namespace FlightChess
                     th.IsBackground = true;
                     th.Start(socketSend);
                 }
-                catch 
-                { }
+                catch (Exception ex)
+                {
+                    if (!File.Exists("errorlogs.txt"))
+                    {
+                        File.CreateText("errorlogs.txt").Close();
+                    }
+                    var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                    var sw = new StreamWriter(fs, Encoding.Default);
+                    sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                    sw.Close();
+                    fs.Close();
+                }
             }
             
         }
@@ -527,8 +590,18 @@ namespace FlightChess
                         Move(s[2] + "/" + s[5]+"/"+ s[3]);
                     }
                 }
-                catch
-                { }
+                catch (Exception ex)
+                {
+                    if (!File.Exists("errorlogs.txt"))
+                    {
+                        File.CreateText("errorlogs.txt").Close();
+                    }
+                    var fs = new FileStream("errorlogs.txt", FileMode.Append);
+                    var sw = new StreamWriter(fs, Encoding.Default);
+                    sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "：" + ex.ToString() + "\r\n");
+                    sw.Close();
+                    fs.Close();
+                }
             }
         }
         #endregion
